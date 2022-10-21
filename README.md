@@ -226,7 +226,9 @@ and SwordfishStrategy in the code.
 
 SudokuSolver supports three formats:
     puzzle specified by a string
+
     puzzle specified programmatically
+
     puzzle specified as a CSV file (Excel format)
 
 =============================================================
