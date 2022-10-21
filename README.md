@@ -18,11 +18,11 @@ way:
 
 The 9x9-puzzle is structured into 3x3 quadrants.
 
-|Q1,1| |Q1,2| |Q1,3|
+|Q1,1|  |Q1,2|  |Q1,3|
 
-|Q2,1| |Q2,2| |Q2,3|
+|Q2,1|  |Q2,2|  |Q2,3|
 
-|Q3,1| |Q3,2| |Q3,3|
+|Q3,1|  |Q3,2|  |Q3,3|
 
     
           
