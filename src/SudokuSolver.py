@@ -772,7 +772,7 @@ class SudokuSolver:
         self.addInfluencerToRow(number, i)
         self.addInfluencerToColumn(number, j)
     
-    # add pivot as influencer to column c with the exceptions stated 
+    # add number as influencer to column j with the exceptions stated 
     # by the exceptionList
     def addInfluencerToColumn(self, number, j, exceptionList = []):
         for i in range(1, DIM+1):
@@ -781,7 +781,7 @@ class SudokuSolver:
                 if not x:
                     self.addInfluencer(number, i, j)
 
-    # add pivot as influencer to row r with the exceptions stated 
+    # add number as influencer to row i with the exceptions stated 
     # by the exceptionList
     def addInfluencerToRow(self, number, i, exceptionList = []):
         for j in range(1, DIM+1):
