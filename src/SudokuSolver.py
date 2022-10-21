@@ -1,6 +1,3 @@
-
-
-
 """
 #############################################################
 Sudoku Solver and Generator, (c) 2022 by Michael Stal
