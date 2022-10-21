@@ -2102,7 +2102,7 @@ if __name__ == "main":
     print("Sudoku Solver & Generator (c) 2022 by Michael Stal")
     
     # Using SudokuSolver as an interactive shell 
-    # which generates Sudoku puzzles which in then
+    # which generates Sudoku puzzles which it then
     # tries to solve. It is called by 
     # <instance>.run()
 
