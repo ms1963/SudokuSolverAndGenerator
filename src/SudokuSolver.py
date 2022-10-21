@@ -1956,7 +1956,7 @@ class SudokuShell:
         while True:
             print("###########################################################")
 
-            value = input("SudokuShell: Enter any key to start new Sudoku puzzle, s to search on Google, or q to quit ---> ")
+            value = input("SudokuShell: Enter any key to start new Sudoku puzzle, or q to quit ---> ")
             print()
             match value:
                 case "q":
