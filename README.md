@@ -216,7 +216,7 @@ To add your own influence strategy:
     Derive subclass from class InfluenceStrategy as described 
     above. 
     Implement the applyStrategy() method.
-    Extend __init__ of class SudokuSolver to instantiate 
+    Extend "__init__" of class SudokuSolver to instantiate 
     and register your own strategy. 
     Pass the used board as argument to constructor of 
     own strategy and ...
