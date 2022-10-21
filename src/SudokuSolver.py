@@ -1951,7 +1951,7 @@ class SudokuShell:
             cls._instance = super(SudokuShell, cls).__new__(cls)
         return cls._instance
         
-    def run(cls, withCheating = False):
+    def run(cls):
         strategiesAlreadyDisplayed = False
         while True:
             print("###########################################################")
