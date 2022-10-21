@@ -1,4 +1,4 @@
-# SudokuSolverAndGenerator
+# Sudoku Solver and Generator
 
 Extensible Python code to generate and solve Sudoku puzzles
 applicable to standard Sudoku board with 9 x 9 positions and
