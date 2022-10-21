@@ -1725,7 +1725,7 @@ should be occupied (recommendation: use >= 17).
 The method returns a Sudoku puzzle as an two-dimensional array of cells
 with numbers. 
 Using the method 
-        transformToString(self, board)
+        turnIntoString(self, board)
 the board may be transformed into a string to be used as an input
 for class SudokuSolver.        
 ######################################################################
