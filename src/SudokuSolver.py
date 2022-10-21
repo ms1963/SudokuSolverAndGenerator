@@ -1332,7 +1332,7 @@ class SudokuSolver:
     ############# prettyPrint method ############## 
     
     # using convertToIntArray _data[] is converted
-    # to a two dimensional array of its.
+    # to a two dimensional array of ints.
     # this array can be printed using prettyPrint()
     def convertToIntArray(self):
         intarray = []
