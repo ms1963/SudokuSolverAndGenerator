@@ -101,13 +101,16 @@ class SudokuSolver:
         self.occupationStrategies = [] # init strategies
         self.influenceStrategies = []
         ## add strategies ## 
+        
         # occupation strategies:
+        
         strategy = self.OneCandidateLeftStrategy(self)
         self.attachOccupationStrategy(strategy)
         strategy = self.RemainingInfluencerStrategy(self)
         self.attachOccupationStrategy(strategy)
         strategy = self.DeepCheckStrategy(self)
         self.attachOccupationStrategy(strategy)
+        
         # influence strategies
         strategy = self.IndirectInfluencersStrategy(self)
         self.attachInfluenceStrategy(strategy)
@@ -324,7 +327,8 @@ class SudokuSolver:
                 # the only candidate left is returned 
                 return candidates[0] # return that number
             return result
-        
+            
+    
     ############# map methods ############# 
     
     # take user defined (i,j) and map it to internal index
@@ -495,13 +499,15 @@ class SudokuSolver:
     # is already occupied or more than one number is possible
                     
     def canBeOccupied(self, i, j):
-        result = 0
+        retVal = (0, "")
         (x, y, z) = self.getElement(i,j) # get entry
         if not x:
             for strategy in self.occupationStrategies:
                 result = strategy.applyStrategy(i,j)
-                if result != 0: break
-        return result
+                if result != 0: 
+                    retVal = (result, str(strategy))
+                    break
+        return retVal
                    
     # occupy field with number
     # set surpress to True to prevent information abour
@@ -1405,9 +1411,10 @@ class SudokuSolver:
             for i in range(1, DIM+1):       # iterate through all board
                 for j in range(1, DIM+1):   # cells and find a cell that 
                                             # can be occupied.
-                    n = self.canBeOccupied(i, j)
+                    (n, msg) = self.canBeOccupied(i, j)
                     if n != 0: # if cell can be occupied 
-                        print("[" + str(i) + "," + str(j) + "] <- " + str(n))                     
+                        print("[" + str(i) + "," + str(j) + "] <- " + str(n))
+                        print("Strategy used = " + msg)                     
                         if info != Info.NONE:   
                             value = input("SudokuSolver: Enter <any key> to continue, q to quit, h to display help ---> ")
                             print()
@@ -1719,7 +1726,7 @@ class SudokuGenerator:
 # It is implemented as a Singleton
 
 class SudokuShell:
-    # no __init__ 0constructor needed
+    # no __init__ constructor needed
     _instance = None
     def __new__(cls):
         if cls._instance == None:
@@ -1891,10 +1898,13 @@ if __name__ == "main":
     # mode == 3: read Sudoku from string 
     
     demo(mode = 2)
+
 """
 else:
+    demo(1)
     shell = SudokuShell()
     shell.run()
 """
+
     
 
