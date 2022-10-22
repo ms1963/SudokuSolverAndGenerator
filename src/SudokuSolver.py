@@ -42,7 +42,7 @@ import   os.path
 
 """
 WARNING: this code is not tested with dim other than 3. 
-It might mot even work
+It might not even work
 """
 
 dim = 3          # size of Sudoku quadrants
