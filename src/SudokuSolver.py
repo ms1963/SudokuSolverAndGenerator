@@ -859,7 +859,7 @@ class SudokuSolver:
                 if x: continue # continue when occupied
                 if pivot in self.board.getCandidates(r,c):
                     result += 1
-            return False
+            return result
 
         # check how often the pivot appears in the column
         def columnContainsCandidate(self, pivot, c):
