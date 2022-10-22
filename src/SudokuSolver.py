@@ -42,7 +42,7 @@ import   os.path
 
 """
 WARNING: this code is not tested with dim other than 3. 
-It might not even work
+It might mot even work
 """
 
 dim = 3          # size of Sudoku quadrants
@@ -1320,29 +1320,6 @@ class SudokuSolver:
         return True
     
     bfs = "" # used to cache results of solveBF()-invocations 
-    
-    # prettyPrint displays the Sudoku board in a textual
-    # but nice way
-    def prettyPrint(self, board, title = ""):
-        def createLine(row):
-            return row[0]+row[5:9].join([row[1:5]*(dim-1)]*dim)+row[9:13]
-            
-        print(title)
-        
-        symbol = " 1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        nums   = [ [""]+[symbol[n] for n in row] for row in board ]
-
-        line0  = createLine("╔═══╤═══╦═══╗")
-        line1  = createLine("║ . │ . ║ . ║")
-        line2  = createLine("╟───┼───╫───╢")
-        line3  = createLine("╠═══╪═══╬═══╣")
-        line4  = createLine("╚═══╧═══╩═══╝")
-
-        print(line0)
-        for r in range(1,DIM+1):
-            print( "".join(n+s for n,s in zip(nums[r-1],line1.split("."))) )
-            print([line2,line3,line4][(r % DIM==0)+(r % dim==0)])
-
                 
     # make sure that cells contain '0', '1', ... , 'DIM'
     def wellFormed(self, string):
@@ -1914,4 +1891,10 @@ if __name__ == "main":
     # mode == 3: read Sudoku from string 
     
     demo(mode = 2)
+"""
+else:
+    shell = SudokuShell()
+    shell.run()
+"""
+    
 
