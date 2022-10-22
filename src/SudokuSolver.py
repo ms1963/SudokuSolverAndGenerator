@@ -912,7 +912,7 @@ class SudokuSolver:
                             rowList = self.matchingRows(pivot,c1,c2,c3)
                             if len(rowList) == dim:
                                 for r in rowList:
-                                    self.board.addInfluencerToRowWithExceptions(pivot, r, [c1, c2, c3])
+                                    self.board.addInfluencerToRow(pivot, r, [c1, c2, c3])
 
         # for all pivots and all configurations of 3 rows where
         # the pivot is found 2 or 3 times as a candidate, it is checked
@@ -934,7 +934,7 @@ class SudokuSolver:
                             colList = self.matchingColumns(pivot,r1,r2,r3)
                             if len(colList) == dim:
                                 for c in colList:
-                                    self.board.addInfluencerToColumnWithExceptions(pivot, c, [r1, r2, r3])
+                                    self.board.addInfluencerToColumn(pivot, c, [r1, r2, r3])
 
         def applyStrategy(self):
             self.applyStrategyToColumns()
