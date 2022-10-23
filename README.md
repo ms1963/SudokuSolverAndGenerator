@@ -253,3 +253,8 @@ SudokuGenerator in combination. It provides a shell
 for creating and solving Sudoku puzzles with 
 handy runtime options such as inspecting current 
 occupants, candidates, or influencers.
+
+If SudokuSolver fails to solve a puzzle, it will display
+the candidates for each remaining unoccupied cell. This
+may be used to figure out whether the class should be
+extended with additional strategies.
