@@ -451,6 +451,20 @@ class SudokuSolver:
                 tmp.append(cell)
             resultlist.append(tmp)
         return resultlist
+        
+    # get the row a cell belongs to    
+    def getRowOfACell(self, i, j):
+        return self.getRow(i)
+        
+    # get the column a cell belongs to    
+    def getColumnOfACell(self, i, j)
+        return self.getColumn(j)
+        
+    # get the quadrant a cell belongs to
+    def getQuadrantOfACell(self, i, j):
+        d1, d2, r, c = self.inverseMapQuadrant(i,j):
+        return self.getQuadrant(d1,d2)
+        
                 
     ############# vacancy/candidates/influencers methods ############# 
     
