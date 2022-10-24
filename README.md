@@ -1,17 +1,17 @@
 # Sudoku Solver and Generator
 
 Extensible Python code to generate and solve Sudoku puzzles
-applicable to standard Sudoku board with 9 x 9 positions and
+applicable to standard Sudoku board with 9 x 9 positions (= cells) and
 digits in {1,2, ..., 9}
 The dimension must be a quadratic.
 Standard board: dim = 3 and DIM = dim * dim = 9
 consists of 3x3 quadrants each of which is a 3x3-matrix of
-numbers.
-Goal: place numbers 1..DIM {1 .. 9} in each quadrant, so that after
+cells.
+Goal: place numbers 1..DIM {1 .. 9} in each cell, so that after
 every step the following rule holds:
 there must be no identical numbers in any quadrant, row or 
 column.
-Game is over when all locations on the board are occupied.
+Game is over when all locations/cells on the board are occupied.
 
 Internally, a Sudoku puzzle/board is considered in the following
 way:
@@ -77,7 +77,7 @@ Entries of _data[]-array:
     
 The data structure _data[] contains DIM x DIM = 81 cells of (x,y,z)-
 tuples. _data[] is a unidirectional array respectively list.
-The make this structure appear as a two-dimensional array
+The make this structure appear as a two-dimensional array,
 mapping functionality is provided. The user sees _data as
 a two-dimensional array with indices going from 1 to 9 (if
 DIM is 9). 
@@ -127,7 +127,7 @@ the SudokuSolver class.
 
 InfluenceStrategies help reduce the number of candidates 
 for cells, thus assisting the occupation strategies. If 
-e.g. a cell is influenced by {1,2,3,4,5,6,7} the only
+e.g. a cell is influenced by {1,2,3,4,5,6,7}, the only
 candidates left are 8 and 9. If by an influence strategy
 8 can be ruled out as a candidate, 9 must be the valid
 occupant of the cell.
@@ -225,10 +225,7 @@ have InfluenceStrategy as parent class:
             # search for possible elimination of candidates 
             # is not supposed to return a result
             
-The method attachOccupationStrategy(self, strategy) of SudokuSolver is
-used to register additional occupation strategies.
-The method attachInfluenceStrategy(self, strategy) is used to register
-additional influence strategies
+
 
 To add your own influence strategy: 
     Derive subclass from class InfluenceStrategy as described 
@@ -241,6 +238,11 @@ To add your own influence strategy:
     ... assign it to self.board (Dependency Injection)
 For examples see IndirectInfluencersStrategy, XWingStrategy,
 and SwordfishStrategy in the code.
+
+The method attachOccupationStrategy(self, strategy) of SudokuSolver is
+used to register additional occupation strategies.
+The method attachInfluenceStrategy(self, strategy) is used to register
+additional influence strategies
 
 SudokuSolver supports three formats:
     
@@ -274,5 +276,5 @@ occupants, candidates, or influencers.
 
 If SudokuSolver fails to solve a puzzle, it will display
 the candidates for each remaining unoccupied cell. This
-may be used to figure out whether the class should be
+may be used to analyze whether and how the class should be
 extended with additional strategies.
