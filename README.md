@@ -285,3 +285,7 @@ If SudokuSolver fails to solve a puzzle, it will display
 the candidates for each remaining unoccupied cell. This
 may be used to analyze whether and how the class should be
 extended with additional strategies.
+
+By using withCheating as argument to SudokuSolver, the solver might use cheating (= looking up a brute force solution).
+
+By using withMonitoring the program will monitor all calls of addInfluencer() that is responsible to add influencers :=: remove candidates in cells.
