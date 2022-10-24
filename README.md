@@ -29,9 +29,9 @@ The 9x9-puzzle is structured into 3x3 quadrants.
 |Q3,1|              |Q3,2|              |Q3,3| -> d1 = 3
 
 
-^                   ^                   ^
-|                   |                   |
-d2 = 1              d2 = 2              d3 = 3
+^                   
+|                   
+d2 = 1              
 
     
     
