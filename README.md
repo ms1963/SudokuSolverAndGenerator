@@ -251,7 +251,9 @@ SudokuSolver supports three formats:
     puzzle specified as a CSV file (Excel format)
 
 =============================================================
-This program consist of the three core classes:
+
+
+This package consist of the three core classes:
 
     SudokuSolver 
         and
