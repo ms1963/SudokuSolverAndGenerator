@@ -552,7 +552,33 @@ class SudokuSolver:
         ic1, jc1 = cell1
         ic2, jc2 = cell2
         return (((ic1-1) / dim) == ((ic2-1) / dim)) and (((ic2-1) / dim) == ((ic2-1) / dim))
+
+    def inSameRegion(self, cell1, cell2):
+        return self.inSameRow(cell1, cell2) or self.inSameColumn(cell1, cell2) or self.inSameQuadrant(cell1, cell2)
+
+    ############# check for candidates ########### 
+
+    # expects a cell which is a tuple (row, col)
+    # and checks whether cand is a candidate of cell
+    def containsCandidate(self, cell, cand):
+        row,col = cell
+        return cand in self.getCandidates(row,col)
         
+    # check in an array cells of cell ( = (row,col) ) 
+    # whether all cells contain cand as candidate
+    def containCandidate(self, cells, cand):
+        containCand = True
+        for cell in cells:
+            containCand = containCand and self.containsCandidate(sell, cand)
+        return containCand
+    
+    # searches for common candidates in a list of cells
+    def searchForCommonCandidates(self, cells):
+        candList = []
+        for cand in range(1, DIM+1):
+            if self.containCandidate(cells, cand):
+                candList.append(cand)
+        return candList
         
     ############# occupy methods ############
         
@@ -1199,6 +1225,7 @@ class SudokuSolver:
                             for n3 in range(n2+1, DIM+1):
                                 # search for hidden triples
                                 self.handleHiddenTriples(array, (n1,n2,n3))   
+    
     ############# check conformance methods ############# 
     
     # check whether row conforms to rules, i.e., whether
