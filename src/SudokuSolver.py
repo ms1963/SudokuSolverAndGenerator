@@ -42,7 +42,8 @@ import   os.path
 
 """
 WARNING: this code is not tested with dim other than 3. 
-It might mot even work
+It might mot even work. In addition, some strategies do 
+only apply to dim == 3
 """
 
 dim = 3          # size of Sudoku quadrants
@@ -570,7 +571,26 @@ class SudokuSolver:
     def inSameRegion(self, cell1, cell2):
         return self.inSameRow(cell1, cell2) or self.inSameColumn(cell1, cell2) or self.inSameQuadrant(cell1, cell2)
 
-    ############# check for candidates ########### 
+
+    # method to build all permutations of a list 
+    def permutations(self, list):
+        if len(list) == 0:
+            return []
+        elif len(list) == 1:
+            return [list]
+        else:
+            resultList = [] 
+            for idx in range(len(list)):
+               first = list[idx]
+               rest = list[:idx] + list[idx+1:]
+           
+               for perm in permutation(rest):
+                   resultList.append([first] + perm)
+               
+            return resultList
+
+
+    ############# check and search for candidates ########### 
 
     # expects a cell which is a tuple (row, col)
     # and checks whether cand is a candidate of cell
@@ -578,7 +598,7 @@ class SudokuSolver:
         row,col = cell
         return cand in self.getCandidates(row,col)
         
-    # check in an array cells of cell ( = (row,col) ) 
+    # check in an array of cells ( = (row,col) ) 
     # whether all cells contain cand as candidate
     def containCandidate(self, cells, cand):
         containCand = True
@@ -594,6 +614,65 @@ class SudokuSolver:
                 candList.append(cand)
         return candList
         
+    # the following three methods check for cells of a 
+    # row/column/quadrant that have n candidates
+        
+    def searchForNCandidatesInARow(self, n, row):
+        assert n >= 0 and row <= 9, "n must be between 0 and 9"
+        resSet = {}
+        for col in range(1, DIM+1):
+            candidates = self.getCandidates(row, col)
+            if len(candidates) == n:
+                resSet.add((row, col, set(candidates)))
+        return resSet
+                
+    def searchForNCandidatesInAColumn(self, n, col):
+        assert n >= 0 and row <= 9, "n must be between 0 and 9"
+        resSet = {}
+        for row in range(1, DIM+1):
+            candidates = self.getCandidates(row, col)
+            if len(candidates) == n:
+                resSet.append((row, col, set(candidates)))
+        return resSet
+                
+    def searchForNCandidatesInAQuadrant(self, n, d1, d2):
+        assert n >= 0 and row <= 9, "n must be between 0 and 9"
+        resSet = []
+        for row in range(1, dim+1):
+            for col in range(1, dim+1):
+                candidates = self.getCandidates((d1-1)*dim+row, (d2-1)*dim+col)
+                if len(candidates) == n:
+                    resSet.append(((d1-1)*dim+row, (d2-1)*dim+col, set(candidates)))
+        return resSet
+        
+    # the next three methods check for cells in a row/column/quadrant 
+    # that have only the specified candidates (cands)
+    def searchForCandidatesInARow(self, cands, row):
+        assert n >= 0 and row <= 9, "n must be between 0 and 9"
+        resSet = {}
+        for result in self.searchForNCandidatesInAColumn(len(cands), col):
+            (i, j, candSet) = result
+            if candList == cands:
+                resSet.add((i,j))
+        return resSet
+        
+    def searchForCandidatesInAColumn(self, cands, col):
+        assert n >= 0 and row <= 9, "n must be between 0 and 9"
+        resSet = {}
+        for result in self.searchForNCandidatesInAColumn(len(cands), col):
+            (i, j, candSet) = result
+            if candList == cands:
+                resSet.add((i,j))
+        return resSet
+        
+    def searchForCandidatesInAQuadrant(self, cands, d1, d2):
+        resSet = {}
+        for result in self.searchForNCandidatesInAQuadrant(len(cands), d1, d2):
+            (i, j, candSet) = result
+            if candList == cands:
+                resSet.add((i,j))
+        return resSet
+
     ############# occupy methods ############
         
     # which number must be placed in this location?
@@ -1782,9 +1861,14 @@ class SudokuSolver:
             if changes == 0: # no changes => cannot solve board any further 
                     print("Error: cannot solve remaining cells with existing strategies.")
                     print("Candidates Listing for manual analysis:")
-                    print("[4:8]        => row 4, column 8")
-                    print("(7 *)        => occupied with 7")
-                    print("[1, 2, 5, 7] => candidates 1, 2, 5 and 7")
+                    print("----------------------------------------")
+                    print("Legend:")
+                    print("----------------------------------------")
+                    print("[4:8]        => cell in row 4, column 8")
+                    print("(7 *)        => cell occupied with 7")
+                    print("[1, 2, 5, 7] => cell with candidates")
+                    print("                     1, 2, 5 and 7")
+                    print("----------------------------------------")
                     print()    
                     self.displayBoard(info.CANDIDATES)
                     return False
@@ -2282,7 +2366,6 @@ if __name__ == "main":
 
 
 else:
-    demo(mode = 1, withCheating = False)
     shell = SudokuShell()
     shell.run(withCheating = False)
 
