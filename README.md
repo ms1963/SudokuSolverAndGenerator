@@ -72,11 +72,15 @@ a two-dimensional array with indices going from 1 to 9.
 
 Entries of _data[]-array:
    the array stores a tuples (x, y, z) for each position
-    where x is True  => location is occupied by number y
-          x is false => location is vacant and ...
-          ... z defines the numbers which influence this position, 
-          i.e., numbers which can not occupy this position and are 
-          therefore no candidates.
+   
+    where:
+            x is True  => location is occupied by number y
+    
+            x is false => location is vacant and ...
+            
+            ... z defines the numbers which influence this position, 
+            i.e., numbers which can not occupy this position and are 
+            therefore no candidates.
     
 The data structure _data[] contains DIM x DIM = 81 cells of (x,y,z)-
 tuples. _data[] is a unidirectional array respectively list.
