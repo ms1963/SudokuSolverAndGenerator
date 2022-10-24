@@ -104,11 +104,16 @@ class SudokuSolver:
     # call self.reinitialize() to delete _data[] and
     # initialize it with new values
     # and register required (predefined) strategies
-    def __init__(self, withCheating):
+    def __init__(self, withCheating, withMonitoring):
         self.reinitialize() # prepare board
         self.occupationStrategies = [] # init strategies
         self.influenceStrategies = []
-        self.withCheating = withCheating
+        # withCheating == True => SudokuSolver uses Cheating
+        self.withCheating = withCheating 
+        # if active every suucessful addinfluencer
+        # call will be displayed
+        self.monitoringActive = withMonitoring
+        
         ## add strategies ## 
         
         # occupation strategies:
@@ -453,16 +458,35 @@ class SudokuSolver:
             resultlist.append(tmp)
         return resultlist
         
+    # get the whole region that (i,j) can "see"
+    def getRegion(self, i, j):
+        resultList = []
+        # get all cells in same row
+        for col in range(1, DIM+1):
+            resultList.append((i, col))
+        # get all elements in same columns
+        for row in range(1, DIM+1):
+            resultList.append((row, j))
+        # get all elements in same quadrant 
+        (d1,d2,r,c) = self.inverseMapQuadrant(i,j)
+        for r_q in range(1, dim+1):
+            for c_q in range(1, dim+1):
+                resultList.append(((d1-1)*dim+r_q, (d2-1)*dim+c_q))
+        return resultList
+                
+            
+        
+        
     # get the row a cell belongs to    
-    def getRowOfACell(self, i, j):
+    def getRowOfCell(self, i, j):
         return self.getRow(i)
         
     # get the column a cell belongs to    
-    def getColumnOfACell(self, i, j):
+    def getColumnOfCell(self, i, j):
         return self.getColumn(j)
         
     # get the quadrant a cell belongs to
-    def getQuadrantOfACell(self, i, j):
+    def getQuadrantOfCell(self, i, j):
         (d1, d2, r, c) = self.inverseMapQuadrant(i,j)
         return self.getQuadrant(d1,d2)
         
@@ -717,11 +741,15 @@ class SudokuSolver:
                 # reanalyze the board, as some influencers have been 
                 # introduced by occupying (i,j), so that the occupation
                 # strategies work
+                if self.monitoringActive:
+                        print("Adding influencers to board after occupying (" + str(i) + "," + str(j) + ")")
                 self.addInfluencersToBoard(number, i, j)
                 # call all strategies which may remove candidates
                 # from some cells which is equivalent to adding
                 # influencers
                 for strategy in self.influenceStrategies:
+                    if self.monitoringActive:
+                        print("Applying strategy " + str(strategy))
                     strategy.applyStrategy()
     
     # is position occupied. Other method would be 
@@ -739,7 +767,9 @@ class SudokuSolver:
         if not x: # location is not occupied 
             if not (number in z): # if not already in list
                 z.append(number) # add it to list
-                self.setElement(i,j,(x, y, z))
+                if self.monitoringActive:
+                    self.setElement(i,j,(x, y, z))
+                    print("addInfluencer called for (" + str(i) + "," + str(j) + ") adding " + str(number))
            
     # add influence to quadrant
     def addInfluencerToQuadrant(self, number, d1, d2):
@@ -2197,8 +2227,10 @@ class SudokuShell:
         return cls._instance
         
     # the withCheating argument determines in run() to use 
-    # cheating in the solver
-    def run(cls, withCheating = False):
+    # cheating in the solver 
+    # the withMonitoring argument determines in run() to use 
+    # monitoring of addInfluencer()-calls in the solver
+    def run(cls, withCheating = False, withMonitoring = False):
         strategiesAlreadyDisplayed = False
         while True:
             print("###################################################################")
@@ -2211,7 +2243,7 @@ class SudokuShell:
                     break
                 
             # instantiate a new solver
-            solver = SudokuSolver(withCheating)
+            solver = SudokuSolver(withCheating, withMonitoring)
             if not strategiesAlreadyDisplayed:
                 print("Identifying installed strategies")
                 print("Occupation Strategies:")
@@ -2354,7 +2386,7 @@ if __name__ == "main":
     # <instance>.run()
 
     shell = SudokuShell()
-    shell.run()
+    shell.run(withCheating = False, withMonitoring = False)
     
     # in demo the test code gets called   
     # mode == 0: read board from CSV file 
@@ -2367,7 +2399,7 @@ if __name__ == "main":
 
 else:
     shell = SudokuShell()
-    shell.run(withCheating = False)
+    shell.run(withCheating = False, withMonitoring = False)
 
 
 
