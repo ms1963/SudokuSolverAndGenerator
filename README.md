@@ -2,11 +2,14 @@
 
 Extensible Python code to generate and solve Sudoku puzzles
 applicable to standard Sudoku board with 9 x 9 positions (= cells) and
-digits in {1, 2, ..., 9}
+digits in {1, 2, ..., 9}.
+
 The dimension must form a square.
+
 Standard board: dim = 3 and DIM = dim * dim = 9
 consists of 3x3 quadrants each of which is a 3x3-matrix of
 cells.
+
 Goal: place numbers 1..DIM {1 .. 9} in each cell, so that after
 every step the following rule holds:
 there must be no identical numbers in any quadrant, row or 
