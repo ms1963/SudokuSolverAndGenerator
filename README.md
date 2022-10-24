@@ -16,7 +16,7 @@ Game is over when all locations on the board are occupied.
 Internally, a Sudoku puzzle/board is considered in the following
 way:
 
-The 9x9-puzzle is structured into 3x3 quadrants.
+The 9x9-puzzle is structured into 3x3 quadrants that are numbered as (d1,d2) where d1 is the row and d2 is the column (d1,d2 in [1,3]).
 
 |Q1,1|              |Q1,2|              |Q1,3| <- d1 = 1
 
