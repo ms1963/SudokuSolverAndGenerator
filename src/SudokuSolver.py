@@ -617,7 +617,7 @@ class SudokuSolver:
     # the following three methods check for cells of a 
     # row/column/quadrant that have n candidates
         
-    def searchForNCandidatesInARow(self, n, row):
+    def searchForNCandidatesInRow(self, n, row):
         assert n >= 0 and row <= 9, "n must be between 0 and 9"
         resSet = {}
         for col in range(1, DIM+1):
@@ -626,7 +626,7 @@ class SudokuSolver:
                 resSet.add((row, col, set(candidates)))
         return resSet
                 
-    def searchForNCandidatesInAColumn(self, n, col):
+    def searchForNCandidatesInColumn(self, n, col):
         assert n >= 0 and row <= 9, "n must be between 0 and 9"
         resSet = {}
         for row in range(1, DIM+1):
@@ -635,7 +635,7 @@ class SudokuSolver:
                 resSet.append((row, col, set(candidates)))
         return resSet
                 
-    def searchForNCandidatesInAQuadrant(self, n, d1, d2):
+    def searchForNCandidatesInQuadrant(self, n, d1, d2):
         assert n >= 0 and row <= 9, "n must be between 0 and 9"
         resSet = []
         for row in range(1, dim+1):
@@ -647,27 +647,27 @@ class SudokuSolver:
         
     # the next three methods check for cells in a row/column/quadrant 
     # that have only the specified candidates (cands)
-    def searchForCandidatesInARow(self, cands, row):
+    def searchForCandidatesInRow(self, cands, row):
         assert n >= 0 and row <= 9, "n must be between 0 and 9"
         resSet = {}
-        for result in self.searchForNCandidatesInAColumn(len(cands), col):
+        for result in self.searchForNCandidatesInRow(len(cands), col):
             (i, j, candSet) = result
             if candList == cands:
                 resSet.add((i,j))
         return resSet
         
-    def searchForCandidatesInAColumn(self, cands, col):
+    def searchForCandidatesInColumn(self, cands, col):
         assert n >= 0 and row <= 9, "n must be between 0 and 9"
         resSet = {}
-        for result in self.searchForNCandidatesInAColumn(len(cands), col):
+        for result in self.searchForNCandidatesInColumn(len(cands), col):
             (i, j, candSet) = result
             if candList == cands:
                 resSet.add((i,j))
         return resSet
         
-    def searchForCandidatesInAQuadrant(self, cands, d1, d2):
+    def searchForCandidatesInQuadrant(self, cands, d1, d2):
         resSet = {}
-        for result in self.searchForNCandidatesInAQuadrant(len(cands), d1, d2):
+        for result in self.searchForNCandidatesInQuadrant(len(cands), d1, d2):
             (i, j, candSet) = result
             if candList == cands:
                 resSet.add((i,j))
