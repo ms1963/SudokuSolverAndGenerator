@@ -80,7 +80,7 @@ Entries of _data[]-array:
     
 The data structure _data[] contains DIM x DIM = 81 cells of (x,y,z)-
 tuples. _data[] is a unidirectional array respectively list.
-The make this structure appear as a two-dimensional array,
+To make this structure appear as a two-dimensional array,
 mapping functionality is provided. The user sees _data as
 a two-dimensional array with indices going from 1 to 9 (if
 DIM is 9). 
