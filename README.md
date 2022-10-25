@@ -114,8 +114,11 @@ for example:
 Instead of accessing the array in such a low-level way, it
 is possible to use getters and setters,
 for example,
+
     tuple = self.getElement(i,j) instead of self._data[self.map(i, j)] 
+    
     self.setElement(i,j,tuple)   instead of self._data[self.map(i, j)] = tuple
+    
     tuple = self.getElementInQuadrant(d1,d2,r,c) instead of
                   tuple = self._data[self.mapQuadrant(d1,d2,r,c)]
 
