@@ -81,6 +81,23 @@ Entries of _data[]-array:
             ... z defines the numbers which influence this position, 
             i.e., numbers which can not occupy this position and are 
             therefore no candidates.
+            
+Short explanation of influencers and candidates:
+
+An influencer is the number n of an occupied cell c in the same region (quadrant, col, row).
+As the occupied cell c sees all cells c' in its region, n cannot be set in all cells c' (which are not already set).
+Thus, n is an influencer of c'. c' can never be occupied by n.
+
+A candidate is a possible values an unoccupied cell c can have. 
+
+If n is a candidate of cell c', it can't be an influencer.
+If n is an influencer of cell c', it can't be a candidate.
+
+=> all numbers = union(influencers of cell, candidates of cell) => both sets complement each other.
+
+In the beginning of a Sudoku puzzle it is much easier to monitor the influencers. If more and more cells get occupied, it is easier to monitor the candidates as there often are only a few.
+This implementations supports both influencers and candidates, but internally uses influencers (see addInfluencer()-methods).
+
     
 The data structure _data[] contains DIM x DIM = 81 cells of (x,y,z)-
 tuples. _data[] is a unidirectional array respectively list.
