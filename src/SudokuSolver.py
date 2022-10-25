@@ -1438,7 +1438,7 @@ class SudokuSolver:
     # Info.INFLUENCERS => print influencers 
     # Info.OCCUPANTS => print occupants       
         
-    def displayBoard(self, info = Info.ALL):
+    def displayBoard(self, info = Info.ALL, compact = False):
         if info == Info.NONE: return
         for k in range(1,DIM+1):
             if (info == Info.OCCUPANTS) and (k > 1) and ((k - 1) % 3 == 0): 
@@ -1452,10 +1452,12 @@ class SudokuSolver:
                     if info == Info.ALL:
                         print("[" + str(k) + "," +str(l) + "] y = *" +str(y), end = " ")
                     elif info == Info.INFLUENCERS:
-                        print("[" + str(k) + ":" +str(l) + "] =", end = " ")
-                        print("(" + str(y) + " *)", end = " ")
+                        if not compact:
+                            print("[" + str(k) + ":" +str(l) + "] =", end = " ")
+                        print("(" + str(y) + "*)", end = " ")
                     elif info == Info.CANDIDATES:
-                        print("[" + str(k) + ":" +str(l) + "] =", end = " ")
+                        if not compact:
+                            print("[" + str(k) + ":" +str(l) + "] =", end = " ")
                         print("(" + str(y) + " *)", end = " ")
                     else:
                         print(" " + str(y) + " ",end = " ")
@@ -1464,10 +1466,12 @@ class SudokuSolver:
                         print("[" + str(k) + "," +str(l) + "] z = " + str(z), end = " " )
                         print(x,y,z);
                     elif info == Info.INFLUENCERS:
-                        print("[" + str(k) + ":" +str(l) + "] =", end = " ")
+                        if not compact:
+                            print("[" + str(k) + ":" +str(l) + "] =", end = " ")
                         print(z, end = " ")
                     elif info == Info.CANDIDATES:
-                        print("[" + str(k) + ":" +str(l) + "] =", end = " ")
+                        if not compact: 
+                            print("[" + str(k) + ":" +str(l) + "] =", end = " ")
                         print(self.calcCandidates(z), end = " ")
                     else:
                         print("   ",end= " ")
@@ -1871,17 +1875,19 @@ class SudokuSolver:
                                     print("[4:8]        => row 4, column 8")
                                     print("(7 *)        => occupied with 7")
                                     print("[1, 2, 5, 7] => influencers 1, 2, 5 and 7")
-                                    print()                                      
-                                    self.displayBoard(info.INFLUENCERS)
-                                    input("press any key to continue ")
+                                    print()
+                                    compact = not self.monitoringActive                                                                                                          
+                                    self.displayBoard(info.INFLUENCERS, compact)
+                                    #input("press any key to continue ")
                                 case "c":
                                     print("### CANDIDATES ###")
                                     print("[4:8]        => row 4, column 8")
                                     print("(7 *)        => occupied with 7")
                                     print("[1, 2, 5, 7] => candidates 1, 2, 5 and 7")
-                                    print()                                             
-                                    self.displayBoard(info.CANDIDATES)
-                                    input("press any key to continue ")
+                                    print()
+                                    compact = not self.monitoringActive                                             
+                                    self.displayBoard(info.CANDIDATES, compact)
+                                    #input("press any key to continue ")
                                 case "s":
                                     print("Shuffling strategies ...")
                                     shuffle(self.occupationStrategies)
@@ -2415,8 +2421,7 @@ if __name__ == "main":
 
 
 else:
-    shell = SudokuShell()
-    shell.run(withCheating = False, withMonitoring = True)
+    SudokuShell().run(withCheating = False, withMonitoring = True)
 
 
 
