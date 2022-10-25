@@ -477,7 +477,7 @@ class SudokuSolver:
         # get all cells in same row
         for col in range(1, DIM+1):
             resultList.append((i, col))
-        # get all elements in same columns
+        # get all elements in same column
         for row in range(1, DIM+1):
             resultList.append((row, j))
         # get all elements in same quadrant 
@@ -785,13 +785,14 @@ class SudokuSolver:
                     print("addInfluencer called for (" + str(i) + "," + str(j) + ") adding " + str(number))
            
     # add influence to quadrant
-    def addInfluencerToQuadrant(self, number, d1, d2):
+    def addInfluencerToQuadrant(self, number, d1, d2, exceptionList = []):
         quad_row = (d1-1) * dim
         quad_col = (d2-1) * dim
         
         for i in range(1, dim+1):
             for j in range(1, dim+1):
-                self.addInfluencer(number, quad_row+i, quad_col+j)
+                if (i,j) not in exceptionList:
+                    self.addInfluencer(number, quad_row+i, quad_col+j)
                    
     # add influences of number in (i,j)                
     def addInfluencersToBoard(self, number, i, j):
@@ -817,6 +818,11 @@ class SudokuSolver:
                 (x,y,z) = self.getElement(i,j)
                 if not x:
                     self.addInfluencer(number, i, j)
+                    
+    def addInfluencerToRegion(self, number, i, j):
+        self.addInfluencerToRow(number, i, [j])
+        self.addInfluencerToColumn(number, j, [i])
+        self.addInfluencerToQuadrant(number, [(i,j)])
         
     """    
     For rows or columns in a quadrant that have at least 1
