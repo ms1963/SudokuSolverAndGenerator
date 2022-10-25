@@ -142,8 +142,6 @@ class SudokuSolver:
             self.attachOccupationStrategy(strategy)
         
         # influence strategies
-        strategy = self.IndirectInfluencersStrategy(self)
-        self.attachInfluenceStrategy(strategy)
         strategy = self.XWingStrategy(self)
         self.attachInfluenceStrategy(strategy)
         strategy = self.SwordFishStrategy(self)
@@ -153,6 +151,8 @@ class SudokuSolver:
         strategy = self.HiddenTriplesStrategy(self)
         self.attachInfluenceStrategy(strategy)
         strategy = PointingPairsAndTriplesStrategy(self)
+        self.attachInfluenceStrategy(strategy)
+        strategy = self.IndirectInfluencersStrategy(self)
         self.attachInfluenceStrategy(strategy)
         
     # deletes and reinitializes self._data
@@ -621,7 +621,7 @@ class SudokuSolver:
                first = list[idx]
                rest = list[:idx] + list[idx+1:]
            
-               for perm in permutation(rest):
+               for perm in permutations(rest):
                    resultList.append([first] + perm)
                
             return resultList
