@@ -86,11 +86,18 @@ class Info(Enum):
 # internally these user coordinates are mapped to 
 # an internal index to an one-dimensional array _data[]
     
-# The Solver class. If a solver is instantiated with 
-# withCheating == True, the solver will look up 
+# The Solver class. 
+# If a solver is instantiated with 
+# withCheating == True, 
+# the solver will look up 
 # cells in a brute force solution whenever it fails
 # to find the occupant of a cell using another
 # strategy
+# If a solver is instantiated with 
+# withMonitoring == True, 
+# it will display more information about what is
+# going on under the hood. This is useful for 
+# analysis of  internal behavior.
 
 class SudokuSolver:
     # self._data is an one-dimensional array that
@@ -108,10 +115,10 @@ class SudokuSolver:
         self.reinitialize() # prepare board
         self.occupationStrategies = [] # init strategies
         self.influenceStrategies = []
-        # withCheating == True => SudokuSolver uses Cheating
+        # withCheating == True => SudokuSolver uses Cheating:
         self.withCheating = withCheating 
-        # if active every suucessful addinfluencer
-        # call will be displayed
+        # obtaining messages about what is going on
+        # internally:
         self.monitoringActive = withMonitoring
         
         ## add strategies ## 
@@ -618,13 +625,13 @@ class SudokuSolver:
 
     # expects a cell which is a tuple (row, col)
     # and checks whether cand is a candidate of cell
-    def containsCandidate(self, cell, cand):
+    def cellContainsCandidate(self, cell, cand):
         row,col = cell
         return cand in self.getCandidates(row,col)
         
     # check in an array of cells ( = (row,col) ) 
     # whether all cells contain cand as candidate
-    def containCandidate(self, cells, cand):
+    def cellsContainCandidate(self, cells, cand):
         containCand = True
         for cell in cells:
             containCand = containCand and self.containsCandidate(sell, cand)
@@ -710,7 +717,7 @@ class SudokuSolver:
             for strategy in self.occupationStrategies:
                 result = strategy.applyStrategy(i,j)
                 if result != 0: 
-                    retVal = (result, str(strategy))
+                    retVal = (result, type(strategy).__name__)
                     break
         return retVal
                    
@@ -749,7 +756,7 @@ class SudokuSolver:
                 # influencers
                 for strategy in self.influenceStrategies:
                     if self.monitoringActive:
-                        print("Applying strategy " + str(strategy))
+                        print("Applying strategy " + type(strategy).__name__)
                     strategy.applyStrategy()
     
     # is position occupied. Other method would be 
@@ -1820,14 +1827,15 @@ class SudokuSolver:
                     (n, msg) = self.canBeOccupied(i, j)
                     if n != 0: # if cell can be occupied 
                         print("[" + str(i) + "," + str(j) + "] <- " + str(n))
-                        print("Strategy used = " + msg)                     
+                        if self.monitoringActive:
+                            print("Strategy used = " + msg)                     
                         if info != Info.NONE:   
                             value = input("SudokuSolver: Enter <any key> to continue, q to quit, h to display help ---> ")
                             print()
                             match value:
                                 case "q": 
                                     print("Exiting from SudokuSolver ...")
-                                    return
+                                    return False
                                 case "w":
                                     rows = self.turnBoardIntoList()
                                     while True:
@@ -1889,7 +1897,7 @@ class SudokuSolver:
                         print("STEP: " + str(self.steps)) # display step
                         print()
             if changes == 0: # no changes => cannot solve board any further 
-                    print("Error: cannot solve remaining cells with existing strategies.")
+                    print("I am stuck: cannot solve remaining cells with existing strategies.")
                     print("Candidates Listing for manual analysis:")
                     print("----------------------------------------")
                     print("Legend:")
@@ -2244,14 +2252,17 @@ class SudokuShell:
                 
             # instantiate a new solver
             solver = SudokuSolver(withCheating, withMonitoring)
-            if not strategiesAlreadyDisplayed:
-                print("Identifying installed strategies")
+            if not strategiesAlreadyDisplayed and withMonitoring:
+                print("Identifying installed strategies ...")
+                print()
                 print("Occupation Strategies:")
                 for strategy in solver.getInstalledOccupationStrategies():
-                    print(strategy)
+                    print(type(strategy).__name__)
+                print()
                 print("Influence Strategies:")
                 for strategy in solver.getInstalledInfluenceStrategies():
-                    print(strategy)
+                    print(type(strategy).__name__)
+                print()
                 strategiesAlreadyDisplayed = True
             # instantiate a new generator
             generator = SudokuGenerator()
@@ -2399,7 +2410,7 @@ if __name__ == "main":
 
 else:
     shell = SudokuShell()
-    shell.run(withCheating = False, withMonitoring = False)
+    shell.run(withCheating = False, withMonitoring = True)
 
 
 
