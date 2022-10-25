@@ -85,10 +85,10 @@ Entries of _data[]-array:
 Short explanation of influencers and candidates:
 
 An influencer is the number n of an occupied cell c in a region (the quadrant in which the cell lives, its col, its row).
-As the occupied cell c sees all cells c' in its region, n cannot be set in all cells c' (which are not already set).
+As the occupied cell c "sees" all cells c' in its region, n cannot be set in these c' =>  n influences its region.
 Thus, n is an influencer of c'. c' can never be occupied by n.
 
-A candidate is a possible values an unoccupied cell c can have. 
+A candidate is a possible value an unoccupied cell c can have. 
 
 If n is a candidate of cell c', it can't be an influencer.
 If n is an influencer of cell c', it can't be a candidate.
