@@ -166,7 +166,7 @@ where to rule out candidates.
 
 Both types of strategies go in hand in hand for solving a puzzle.
 
-There is an strategy called "Cheating" which is not really
+There is a strategy called "Cheating" which is not really
 a strategy. Instead it uses a solution that was calculated
 in a brute force algorithm. Whenever occupy() does not find
 a solution in another strategy, cheating does. To use
