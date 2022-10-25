@@ -683,13 +683,13 @@ class SudokuSolver:
         return resSet
         
     # the next three methods check for cells in a row/column/quadrant 
-    # that have only the specified candidates (cands)
+    # that have only the specified candidates (set cands)
     def searchForCandidatesInRow(self, cands, row):
         assert n >= 0 and row <= 9, "n must be between 0 and 9"
         resSet = {}
         for result in self.searchForNCandidatesInRow(len(cands), col):
             (i, j, candSet) = result
-            if candList == cands:
+            if candSet == cands:
                 resSet.add((i,j))
         return resSet
         
@@ -698,7 +698,8 @@ class SudokuSolver:
         resSet = {}
         for result in self.searchForNCandidatesInColumn(len(cands), col):
             (i, j, candSet) = result
-            if candList == cands:
+            # using set to avoid dependency on order of elements
+            if candSet == cands:
                 resSet.add((i,j))
         return resSet
         
@@ -706,7 +707,8 @@ class SudokuSolver:
         resSet = {}
         for result in self.searchForNCandidatesInQuadrant(len(cands), d1, d2):
             (i, j, candSet) = result
-            if candList == cands:
+            # using set to avoid dependency on order of elements
+            if candSet == cands:
                 resSet.add((i,j))
         return resSet
 
