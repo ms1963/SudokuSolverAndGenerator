@@ -109,9 +109,9 @@ DIM is 9).
 for example:
     self._data[self.map(i, j)] 
     represents the cell in 
-    row i and column j with 1 <= i,j <= 9
+    row i and column j with i,j in [1...9]
     
-Instead of accessing the array in such a low-level way it
+Instead of accessing the array in such a low-level way, it
 is possible to use getters and setters,
 for example,
     tuple = self.getElement(i,j) instead of self._data[self.map(i, j)] 
