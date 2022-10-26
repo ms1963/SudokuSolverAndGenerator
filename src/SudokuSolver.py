@@ -687,7 +687,7 @@ class SudokuSolver:
     def searchForCandidatesInRow(self, cands, row):
         assert n >= 0 and row <= 9, "n must be between 0 and 9"
         resSet = {}
-        for result in self.searchForNCandidatesInRow(len(cands), col):
+        for result in self.searchForNCandidatesInRow(len(cands), row):
             (i, j, candSet) = result
             if candSet == cands:
                 resSet.add((i,j))
