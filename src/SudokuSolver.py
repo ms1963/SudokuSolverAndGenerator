@@ -1855,7 +1855,7 @@ class SudokuSolver:
                         if self.monitoringActive:
                             print("Strategy used = " + msg)                     
                         if info != Info.NONE:   
-                            value = input("SudokuSolver: Enter <any key> to continue, q to quit, h to display help ---> ")
+                            value = input("(SudokuSolver): Enter <any key> to continue, q to quit, h to display help ---> ")
                             print()
                             match value:
                                 case "q": 
@@ -1887,7 +1887,7 @@ class SudokuSolver:
                                     input("press any key to continue ")
                                 case "i":
                                     print("### INFLUENCERS ###") 
-                                    print("[4:8]        => row 4, column 8")
+                                    print("[3:7] = ...  => cell in row 3, column 7")
                                     print("(7 *)        => occupied with 7")
                                     print("[1, 2, 5, 7] => influencers 1, 2, 5 and 7")
                                     print()
@@ -1896,7 +1896,8 @@ class SudokuSolver:
                                     #input("press any key to continue ")
                                 case "c":
                                     print("### CANDIDATES ###")
-                                    print("[4:8]        => row 4, column 8")
+
+                                    print("[3:7] = ...  => cell in row 3, column 7")
                                     print("(7 *)        => occupied with 7")
                                     print("[1, 2, 5, 7] => candidates 1, 2, 5 and 7")
                                     print()
@@ -1929,6 +1930,8 @@ class SudokuSolver:
                     print("----------------------------------------")
                     print("Legend:")
                     print("----------------------------------------")
+
+                    print("[3:7] = ...  => cell in row 3, column 7")
                     print("[4:8]        => cell in row 4, column 8")
                     print("(7 *)        => cell occupied with 7")
                     print("[1, 2, 5, 7] => cell with candidates")
@@ -2268,9 +2271,7 @@ class SudokuShell:
     def run(cls, withCheating = False, withMonitoring = False):
         strategiesAlreadyDisplayed = False
         while True:
-            print("###################################################################")
-
-            value = input("SudokuShell: Enter any key to start new Sudoku puzzle, or q to quit ---> ")
+            value = input("(SudokuShell): Enter any key to start new Sudoku puzzle, or q to quit ---> ")
             print()
             match value:
                 case "q":
@@ -2436,7 +2437,7 @@ if __name__ == "main":
 
 
 else:
-    SudokuShell().run(withCheating = False, withMonitoring = True)
+    SudokuShell().run(withCheating = False, withMonitoring = False)
 
 
 
