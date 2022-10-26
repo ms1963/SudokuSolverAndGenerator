@@ -1568,7 +1568,7 @@ class SudokuSolver:
                     print(0)
         print()
         
-    ############# prettyPrint method ############## 
+    ############# prettyPrint methods ############## 
     
     # using convertToIntArray _data[] is converted
     # to a two dimensional array of ints.
@@ -1603,6 +1603,97 @@ class SudokuSolver:
             print( "".join(n+s for n,s in zip(nums[r-1],line1.split("."))) )
             print([line2,line3,line4][(r % DIM==0)+(r % dim==0)])
             
+    def printCandidatesAndInfluencers(self, candidates = True, title = ""):
+        assert dim == 3, "sudokuPrint only supports standard Sudoku puzzles"
+
+        # filledStrings returns a formated string with a maximum
+        # of three candidates or influencers
+        def filledString(lst, requiredSize = 3):
+            if requiredSize < len(lst):
+                raise ValueError("requiredSize must be greater or equal to length of list")
+            result = " "
+            for elem in lst:
+                result += str(elem) + " "
+            delta = requiredSize - len(lst)
+            if delta > 0:
+                for idx in range(0, delta): 
+                    result += "  "
+            result += " "
+            return result
+    
+        # numberStrings returns formated strings if the cell is 
+        # occupied by a number
+        def numberStrings(number, isOccupant = True):
+            lines = []
+            lines.append("        ")
+            if isOccupant:
+                lines.append(" * " + str(number) + " *  ")
+            else:
+                lines.append("   " + str(number) + "    ")
+            lines.append("        ")
+            return lines
+        
+        
+        # body of printCandidatesAndInfluencers():
+    
+        if title != "": 
+            print("                               " + title)
+        print("----------------------------------------------------------------------------------")
+        for r in range(1, DIM+1):
+            line1 = "| " 
+            line2 = "| "
+            line3 = "| "
+            for c in range(1, DIM+1):
+                cell = []
+                number = 0
+                # get Element at (r,c)
+                (x,y,z) = self.getElement(r,c)
+                if not x:
+                    if not candidates: # influencers are needed
+                        cell = z
+                    else:  # candidates are needed
+                        cell = self.calcCandidates(z)
+                    size = len(cell) # measure length of cell
+                else:
+                    number = y # get occupant
+                
+                if not x: # cell is not occupied
+                    if size != 1:
+                        line1 += filledString(cell[0:3])
+                        line2 += filledString(cell[3:6])
+                        line3 += filledString(cell[6:])
+                    else:
+                        lines = numberStrings(cell[0], isOccupant = False)
+                        line1 += lines[0]
+                        line2 += lines[1]
+                        line3 += lines[2]
+                else:
+                    lines = numberStrings(number, isOccupant = True)
+                    line1 += lines[0]
+                    line2 += lines[1]
+                    line3 += lines[2]
+                if c % 3 == 0:
+                    line1 += " | "
+                    line2 += " | "
+                    line3 += " | "
+
+                
+            print(line1)
+            print(line2)
+            print(line3)
+            if r % 3 == 0:
+                print("----------------------------------------------------------------------------------")
+                print()
+            else:
+                print()
+        print("Legend: '* number *' specifies the occupant of a cell.")
+        print()
+        print("        ' 1 2 3 '")
+        print("        ' 4 5 6 '    specify the influencers or canadidates.")
+        print("        ' 7     '")
+        
+            
+    
         
     ############# conversion methods   ############# 
     
@@ -1886,23 +1977,9 @@ class SudokuSolver:
                                     print()
                                     input("press any key to continue ")
                                 case "i":
-                                    print("### INFLUENCERS ###") 
-                                    print("[3:7] = ...  => cell in row 3, column 7")
-                                    print("(7 *)        => occupied with 7")
-                                    print("[1, 2, 5, 7] => influencers 1, 2, 5 and 7")
-                                    print()
-                                    compact = not self.monitoringActive                                                                                                          
-                                    self.displayBoard(info.INFLUENCERS, compact)
-                                    #input("press any key to continue ")
+                                    self.printCandidatesAndInfluencers(candidates = False, title="LIST OF INFLUENCERS")
                                 case "c":
-                                    print("### CANDIDATES ###")
-
-                                    print("[3:7] = ...  => cell in row 3, column 7")
-                                    print("(7 *)        => occupied with 7")
-                                    print("[1, 2, 5, 7] => candidates 1, 2, 5 and 7")
-                                    print()
-                                    compact = not self.monitoringActive                                             
-                                    self.displayBoard(info.CANDIDATES, compact)
+                                    self.printCandidatesAndInfluencers(candidates = True, title="LIST OF CANDIDATES")
                                     #input("press any key to continue ")
                                 case "s":
                                     print("Shuffling strategies ...")
@@ -1927,18 +2004,9 @@ class SudokuSolver:
             if changes == 0: # no changes => cannot solve board any further 
                     print("I am stuck: cannot solve remaining cells with existing strategies.")
                     print("Candidates Listing for manual analysis:")
-                    print("----------------------------------------")
-                    print("Legend:")
-                    print("----------------------------------------")
-
-                    print("[3:7] = ...  => cell in row 3, column 7")
-                    print("[4:8]        => cell in row 4, column 8")
-                    print("(7 *)        => cell occupied with 7")
-                    print("[1, 2, 5, 7] => cell with candidates")
-                    print("                     1, 2, 5 and 7")
-                    print("----------------------------------------")
-                    print()    
-                    self.displayBoard(info.CANDIDATES)
+                    self.printCandidatesAndInfluencers(candidates = True, title="LIST OF CANDIDATES")
+                    
+                    
                     return False
         if (self.isCompleted()): # successful completion of loop
             print("Success: board solved")
