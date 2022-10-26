@@ -174,15 +174,21 @@ Cheating instantiate the SudokuSolver class with the
 argument withCheating set to True.
 
 To add your own occupation strategy: 
+
     Derive subclass from class OccupationStrategy. 
+    
     Each applyXXXX()-method either returns 0, if 
     no solution was found for a given (i,j),       
     or the number to fill in otherwise.
+    
     Extend __init__ of class SudokuSolver to instantiate 
     and register your own strategy. 
+    
     Pass the used board as argument to constructor of 
     own strategy and ...
+    
     ... assign it to self.board (Dependency Injection)
+    
 For examples see RemainingInfluencerStrategy and
 DeepCheckStrategy in the code.
 
@@ -229,15 +235,18 @@ is collecting the results of the other methods:
             return res
             
 You may override applyStrategy() in your own strategy class.
-Likewise, you may implement only one of the other methods
-such as applyToRow() so that it does only return 0, if you
+Likewise, you may implement only one or even none of the other 
+methods such as applyToRow() so that it does only return 0, if you
 do not need the method for your strategy:
     
     def applyToRow(self, i, j):
         return 0
-        
+   
+You may also leave out such a method completely such as in:
 
-    
+   def applyToRow(self, i, j):
+        pass
+
 To add your own influence strategy, your strategy class must
 have InfluenceStrategy as parent class:
     
@@ -257,12 +266,17 @@ have InfluenceStrategy as parent class:
 To add your own influence strategy: 
     Derive subclass from class InfluenceStrategy as described 
     above. 
+    
     Implement the applyStrategy() method.
+    
     Extend "__init__" of class SudokuSolver to instantiate 
     and register your own strategy. 
+    
     Pass the used board as argument to constructor of 
     own strategy and ...
+    
     ... assign it to self.board (Dependency Injection)
+    
 For examples see IndirectInfluencersStrategy, XWingStrategy,
 and SwordfishStrategy in the code.
 
