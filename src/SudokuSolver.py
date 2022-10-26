@@ -385,7 +385,9 @@ class SudokuSolver:
             
         def applyStrategy(self, i, j):
             if not self.board.isOccupied(i,j):
-                idx = (i-1) * DIM + j - 1
+                # calculating index 
+                idx = self.board.map(i,j)
+                # looking up solution in brute force table:
                 return int(self.board.solution[idx])
     
             
@@ -712,7 +714,7 @@ class SudokuSolver:
                 resSet.add((i,j))
         return resSet
 
-    ############# occupy methods ############
+    ############# occupation related methods ############
         
     # which number must be placed in this location?
     # Returns 0 if no number can be placed since location  
@@ -1602,18 +1604,23 @@ class SudokuSolver:
         for r in range(1,DIM+1):
             print( "".join(n+s for n,s in zip(nums[r-1],line1.split("."))) )
             print([line2,line3,line4][(r % DIM==0)+(r % dim==0)])
-            
+    
+    # method to print board with candidates or influencers perspective
+    # it uses the method getElement(i,j) zo access individual cells:        
     def printCandidatesAndInfluencers(self, candidates = True, title = ""):
         assert dim == 3, "sudokuPrint only supports standard Sudoku puzzles"
 
-        # filledStrings returns a formated string with a maximum
+        # filledStrings returns a formatted string with a maximum
         # of three candidates or influencers
         def filledString(lst, requiredSize = 3):
             if requiredSize < len(lst):
                 raise ValueError("requiredSize must be greater or equal to length of list")
             result = " "
+            # print elements of lst 
             for elem in lst:
                 result += str(elem) + " "
+            # if we need to fill up missing numbers, 
+            # then we are filling the gaps:
             delta = requiredSize - len(lst)
             if delta > 0:
                 for idx in range(0, delta): 
@@ -1621,8 +1628,8 @@ class SudokuSolver:
             result += " "
             return result
     
-        # numberStrings returns formated strings if the cell is 
-        # occupied by a number
+        # numberStrings returns formatted strings if the cell is 
+        # occupied by a number (occupant or single influencer/candidate)
         def numberStrings(number, isOccupant = True):
             lines = []
             lines.append("        ")
@@ -1648,17 +1655,20 @@ class SudokuSolver:
                 number = 0
                 # get Element at (r,c)
                 (x,y,z) = self.getElement(r,c)
-                if not x:
+                if not x: # unoccupied cell
+                    # the unoccupied cell is instantiated with 
+                    # candidates (if candidates == True) or 
+                    # with influencers
                     if not candidates: # influencers are needed
                         cell = z
                     else:  # candidates are needed
                         cell = self.calcCandidates(z)
                     size = len(cell) # measure length of cell
-                else:
+                else: # occupied cell
                     number = y # get occupant
                 
                 if not x: # cell is not occupied
-                    if size != 1:
+                    if size != 1: 
                         line1 += filledString(cell[0:3])
                         line2 += filledString(cell[3:6])
                         line3 += filledString(cell[6:])
@@ -1667,20 +1677,20 @@ class SudokuSolver:
                         line1 += lines[0]
                         line2 += lines[1]
                         line3 += lines[2]
-                else:
+                else: # we are dealing with an occupied cell
                     lines = numberStrings(number, isOccupant = True)
                     line1 += lines[0]
                     line2 += lines[1]
                     line3 += lines[2]
-                if c % 3 == 0:
+                if c % 3 == 0: # draw border of current quadrant
                     line1 += " | "
                     line2 += " | "
                     line3 += " | "
-
-                
+   
             print(line1)
             print(line2)
             print(line3)
+            # print border of current row
             if r % 3 == 0:
                 print("----------------------------------------------------------------------------------")
                 print()
