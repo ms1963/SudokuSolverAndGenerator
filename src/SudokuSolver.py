@@ -758,7 +758,7 @@ class SudokuSolver:
                 # strategies work
                 if self.monitoringActive:
                         print("Adding influencers to board after occupying (" + str(i) + "," + str(j) + ")")
-                self.addInfluencersToBoard(number, i, j)
+                self.addInfluencersToRegion(number, i, j)
                 # call all strategies which may remove candidates
                 # from some cells which is equivalent to adding
                 # influencers
@@ -775,8 +775,11 @@ class SudokuSolver:
 
         
     ############# add influencer  methods ############# 
+    # this strategy eliminates the need for some other
+    # strategies such as PointingPairsAndTriples 
     
-    # add additional influencer to single cell(i,j)
+    # add additional influencer to single cell(i,j). Note: 
+    # occupied cells are left untouched
     def addInfluencer(self, number, i, j):
         (x, y, z) = self.getElement(i,j)
         if not x: # location is not occupied 
@@ -796,8 +799,9 @@ class SudokuSolver:
                 if (i,j) not in exceptionList:
                     self.addInfluencer(number, quad_row+i, quad_col+j)
                    
-    # add influences of number in (i,j)                
-    def addInfluencersToBoard(self, number, i, j):
+    # add influences of number in (i,j) without any exceptions
+    # however, occupied cells are left untouched                
+    def addInfluencersToRegion(self, number, i, j):
         (d1, d2, r, c) = self.inverseMapQuadrant(i, j)
         self.addInfluencerToQuadrant(number, d1, d2)
         self.addInfluencerToRow(number, i)
@@ -820,7 +824,8 @@ class SudokuSolver:
                 (x,y,z) = self.getElement(i,j)
                 if not x:
                     self.addInfluencer(number, i, j)
-                    
+    
+    # add influencers to region but do not change (i,j):                
     def addInfluencerToRegion(self, number, i, j):
         self.addInfluencerToRow(number, i, [j])
         self.addInfluencerToColumn(number, j, [i])
@@ -877,6 +882,8 @@ class SudokuSolver:
 
             
     ############# Indirect Influencers Strategy ############ 
+    # This strategy may substiture other strategies such as 
+    # HiddenPairs, PointingPairsAndTriples, ....
             
     class IndirectInfluencersStrategy(InfluenceStrategy):
         def __init__(self, board):
@@ -2310,8 +2317,8 @@ Demo code used to check SudokuSolver and SudokuGenerator
 # mode 0: read Sudoko from CSV file 
 # mode 1: programmatically configure Sudoku 
 # mode 2: read board configuration from string list
-def demo(mode = 0, withCheating = False):
-    board = SudokuSolver(withCheating)
+def demo(mode = 0, withCheating = False, withMonitoring = False):
+    board = SudokuSolver(withCheating, withMonitoring)
     
     match mode:
         case 0:
