@@ -2381,7 +2381,11 @@ class SudokuShell:
             # the solver understands
             solver.turnStringIntoBoard(intarray)
             # call the solver to solve the puzzle
-            solver.solve(Info.PRETTY)
+            succeeded = solver.solve(Info.PRETTY)
+            if succeeded:
+                print("SudokuSolver succeeded solving the puzzle!")
+            else:
+                print("SudokuSolver Failed solving the puzzle!")
             print()
             
             
@@ -2515,7 +2519,7 @@ if __name__ == "main":
 
 
 else:
-    SudokuShell().run(withCheating = False, withMonitoring = True)
+    SudokuShell().run(withCheating = False, withMonitoring = False)
 
 
 
