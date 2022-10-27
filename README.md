@@ -139,15 +139,6 @@ platform where developers may plug-in additional strategies.
 OccupationStrategies and InfluenceStrategies are used to extend 
 SudokuSolver. 
 
-What are influencers and what are candidates?
-An influencer is a number that cannot occupy a cell. In the 
-example above, the 5 in the last row (9, 2) is an influencer
-for all other locations in the same row, column or quadrant.
-This implies: 5 can not be an occupant of these other locations.
-Candidates of a cell are numbers that may occupy this cell.
-If a number is a candidate, it can not be an influencer 
-ánd vice-versa.
-
 OccupationStrategies help to find cells that can be occupied.
 They are called within the method canBeOccupied() of
 the SudokuSolver class. 
@@ -158,6 +149,7 @@ e.g. a cell is influenced by {1,2,3,4,5,6,7}, the only
 candidates left are 8 and 9. If by an influence strategy
 8 can be ruled out as a candidate, 9 must be the valid
 occupant of the cell.
+
 Influence strategies are called within the method occupy() 
 of the SudokuSolver class. Whenever a number becomes
 occupant in one of the cells, an influence strategy
@@ -238,20 +230,24 @@ You may override applyStrategy() in your own strategy class.
 Likewise, you may implement only one or even none of the other 
 methods such as applyToRow() so that it does only return 0, if you
 do not need the method for your strategy:
+
     
     def applyToRow(self, i, j):
         return 0
+        
    
 You may also leave out such a method completely such as in:
 
+
    def applyToRow(self, i, j):
         pass
+        
 
 To add your own influence strategy, your strategy class must
 have InfluenceStrategy as parent class:
+
     
     class MyInfluenceStrategy(InfluenceStrategy):
-        
         def __init__(self, board):
             self.board = board 
             
@@ -264,6 +260,7 @@ have InfluenceStrategy as parent class:
 
 
 To add your own influence strategy: 
+
     Derive subclass from class InfluenceStrategy as described 
     above. 
     
@@ -282,6 +279,7 @@ and SwordfishStrategy in the code.
 
 The method attachOccupationStrategy(self, strategy) of SudokuSolver is
 used to register additional occupation strategies.
+
 The method attachInfluenceStrategy(self, strategy) is used to register
 additional influence strategies
 
@@ -306,9 +304,11 @@ This package consist of the three core classes:
     
 The first one (SudokuSolver) helps solving Sudoku puzzles 
 (see above). 
+
 The second one (SudokuGenerator) is used to create new 
 Sudoku puzzles. Its output may be transformed to a 
 string that may be used as input to SudokuSolver.
+
 SudokuShell demonstrates how to use SudokuSolver and
 SudokuGenerator in combination. It provides a shell
 for creating and solving Sudoku puzzles with 
