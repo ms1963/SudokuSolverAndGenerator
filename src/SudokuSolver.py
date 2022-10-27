@@ -19,7 +19,9 @@ This package consist of the three core classes:
         and
     SudokuGenerator
         and
-    SudokuShell.
+    SudokuShell
+        and 
+    SudokuWhatIf
     
 The first one (SudokuSolver) helps solving Sudoku puzzles 
 (see above). 
@@ -28,6 +30,9 @@ Sudoku puzzles. Its output may be transformed to a
 string that may be used as input to SudokuSolver.
 SudokuShell demonstrates how to use SudokuSolver and
 SudokuGenerator in combination.
+SudokuWhatIf is used to display scenarios for unsolved
+Sudoku puzzles by letting the user make guesses. For now
+it is experimental.
 
 The method 
 
@@ -43,7 +48,7 @@ import   csv
 import   time
 from     enum    import Enum, unique
 from     random  import shuffle
-import   copy
+from     copy    import copy, deepcopy
 import   os.path
 
 """
@@ -2279,7 +2284,7 @@ class SudokuGenerator:
             # clear cell
             self.board[row][col] = 0
             # make a copy to be used for the recursive call
-            board_copy = copy.deepcopy(self.board)
+            board_copy = deepcopy(self.board)
             # initialize noOfSolutions counter to zero
             self.noOfSolutions = 0 
             # try to solve Sudoku     
@@ -2386,9 +2391,161 @@ class SudokuShell:
                 print("SudokuSolver succeeded solving the puzzle!")
             else:
                 print("SudokuSolver Failed solving the puzzle!")
-            print()
+                completed = False
+                while not completed:
+                    wrongAnswer = True
+                    while wrongAnswer:
+                        print()
+                        wish = input("Wanna try a What-If scenario (y,n)? ")
+                        if wish == "y":
+                            wrongAnswer = False
+                            swi = SudokuWhatIf(solver)
+                            result = swi.runScenario()
+                            if result:
+                                completed = True
+                        elif wish == "n":
+                            completed = True
+                            break
+                        else:
+                            print("Please, answer y or n!")
+                        
             
-            
+""" 
+SudokuWhatIf is used to run what-if-scenarios if SudokuSolver does not succeed.
+Users can specify guesses for cells and these scenarios will then be tested.
+Note that this functionality is currently very expermimental.
+"""
+
+@unique
+class Tokens(Enum):
+    OPAREN = 10 # = [
+    CPAREN = 11 # = ]
+    ASSIGN = 12 # = =
+    ERROR  = 13 
+    EOF    = 14
+    SEP    = 15 # = ,
+    
+    
+class SudokuWhatIf:
+    def __init__(self, solver):
+        self.solver = deepcopy(solver)
+    
+    # parser for checking cell assigments the user types in such as [7, 9] = 6
+    class CellAssignmentParser:
+        def __init__(self, string):
+            self.string = string
+            self.pos = 0
+
+        def getNextToken(self):
+            if self.pos >= len(self.string):
+                print("Error: unexpected EOF")
+                return Tokens.EOF
+            while self.string[self.pos] == " " and self.pos < len(self.string)-1: 
+                self.pos += 1
+                continue 
+            if self.string[self.pos] == '[': 
+                self.pos += 1
+                return Tokens.OPAREN
+            elif self.string[self.pos] in ["1", "2", "3", "4", "5", "6", "7", "8", "9"]:
+                self.pos += 1
+                return int(self.string[self.pos-1])
+            elif self.string[self.pos] == "]":
+                self.pos += 1                 
+                return Tokens.CPAREN
+            elif self.string[self.pos] == ',': 
+                self.pos+= 1
+                return Tokens.SEP
+            elif self.string[self.pos] == "=": 
+                self.pos += 1
+                return Tokens.ASSIGN
+            elif self.string[self.pos] == "\n":
+                return Tokens.EOF
+            else: return Tokens.ERROR
+
+        def parse(self):
+            num1 = 0
+            num2 = 0
+            num3 = 0
+            # parse for [
+            token = self.getNextToken()
+            if token != Tokens.OPAREN:
+                print("Error: [ expected in pos " + str(1+self.pos))
+                return None
+            # parse for number in [1..9]
+            token = self.getNextToken()
+            if not token in range(1,10):
+                print("Error: number in [1..9] expected in pos " + str(1+self.pos))
+                return None
+            else:
+                num1 = token
+            # parse for ,
+            token = self.getNextToken()
+            if not token == Tokens.SEP:
+                print("Error: , expected in pos " + str(1+self.pos))
+                return None
+            # parse for number in [1..9]
+            token = self.getNextToken()
+            if not token in range(1,10):
+                print("Error: number in [1..9] expected in pos " + str(1+self.pos))
+                return None
+            else:
+                num2 = token
+            # parse for ]
+            token = self.getNextToken()
+            if token != Tokens.CPAREN:
+                print("Error: ] expected in pos " + str(1+self.pos))
+                return None
+            # parse for =
+            token = self.getNextToken()
+            if not token == Tokens.ASSIGN:
+                print("Error: = expected in pos " + str(1+self.pos))
+                return None
+            # parse for number in [1..9]
+            token = self.getNextToken()
+            if not token in range(1,10):
+                print("Error: number in [1..9] expected in pos " + str(1+self.pos))
+                return None
+            else:
+                num3 = token
+                return (num1, num2, num3)
+
+
+    def runScenario(self):
+        scenarioSolver = SudokuSolver(withCheating = False, withMonitoring = True)
+        for row in range(1, DIM+1):
+            for col in range(1, DIM+1):
+                (x,y,z) = self.solver.getElement(row, col)
+                if x:
+                    scenarioSolver.occupy(y, row, col)
+        # display Sudoku board to run scenarios on
+        self.solver.prettyPrint(self.solver.convertToIntArray())
+        self.solver.printCandidatesAndInfluencers(candidates = True, title="LIST OF CANDIDATES")
+
+        ready = False
+        while not ready:
+            correct = False
+            while not correct:
+                string = input("Please, make a guess for a cell (format: [r,c] = number, e.g., [3,7]=8) :")
+                parser = self.CellAssignmentParser(string)
+                # call parser
+                result = parser.parse()
+                # when parser could recognize correct input, stop loop
+                if result != None: correct = True
+            # check if cell is occupied
+            if not scenarioSolver.isOccupied(result[0], result[1]):
+                scenarioSolver.occupy(result[2], result[0], result[1])
+                ready = True
+                # check whether board is conformant
+                if scenarioSolver.checkConformanceOfBoard() == False:
+                    print("Warning: this leads to an invalid board configuration.")
+                    print("Going back to start context.")
+                    scenarioSolver = deepcopy(self.solver)
+                    ready = False       
+            else:
+                print("Cell [" + + str(result[0]) + "," + str(result[1]) + "] already occupied")
+        return scenarioSolver.solve(info=Info.PRETTY)
+                    
+          
 """
 #############################################################
 Demo code used to check SudokuSolver and SudokuGenerator
