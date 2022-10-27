@@ -2404,6 +2404,7 @@ class SudokuShell:
                             if result:
                                 completed = True
                         elif wish == "n":
+                            wrongAnswer = False
                             completed = True
                             break
                         else:
