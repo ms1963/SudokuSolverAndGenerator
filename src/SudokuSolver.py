@@ -2416,6 +2416,8 @@ Users can specify guesses for cells and these scenarios will then be tested.
 Note that this functionality is currently very expermimental.
 """
 
+# Token values: helper class for CellAssignmentParser
+
 @unique
 class Tokens(Enum):
     OPAREN = 10 # = [
@@ -2436,7 +2438,7 @@ class SudokuWhatIf:
             self.string = string
             self.pos = 0
 
-        def getNextToken(self):
+        def getNextToken(self): # the lexer
             if self.pos >= len(self.string):
                 print("Error: unexpected EOF")
                 return Tokens.EOF
@@ -2462,7 +2464,7 @@ class SudokuWhatIf:
                 return Tokens.EOF
             else: return Tokens.ERROR
 
-        def parse(self):
+        def parse(self): # recursive descent parser for user input
             num1 = 0
             num2 = 0
             num3 = 0
@@ -2477,7 +2479,7 @@ class SudokuWhatIf:
                 print("Error: number in [1..9] expected in pos " + str(1+self.pos))
                 return None
             else:
-                num1 = token
+                num1 = token # row of cell
             # parse for ,
             token = self.getNextToken()
             if not token == Tokens.SEP:
@@ -2489,7 +2491,7 @@ class SudokuWhatIf:
                 print("Error: number in [1..9] expected in pos " + str(1+self.pos))
                 return None
             else:
-                num2 = token
+                num2 = token # col of cell
             # parse for ]
             token = self.getNextToken()
             if token != Tokens.CPAREN:
@@ -2506,11 +2508,12 @@ class SudokuWhatIf:
                 print("Error: number in [1..9] expected in pos " + str(1+self.pos))
                 return None
             else:
-                num3 = token
-                return (num1, num2, num3)
+                num3 = token # value assigned to cell
+                return (num1, num2, num3) # reflecting the input "[num1, num2] = num3""
 
-
+    # run a what-if scenario
     def runScenario(self):
+        # create a new scenarioSolver with an existing solver as input
         scenarioSolver = SudokuSolver(withCheating = False, withMonitoring = True)
         for row in range(1, DIM+1):
             for col in range(1, DIM+1):
@@ -2522,9 +2525,9 @@ class SudokuWhatIf:
         self.solver.printCandidatesAndInfluencers(candidates = True, title="LIST OF CANDIDATES")
 
         ready = False
-        while not ready:
+        while not ready: # loop until preconditions for scenariohold
             correct = False
-            while not correct:
+            while not correct: # loop until the input is correct
                 string = input("Please, make a guess for a cell (format: [r,c] = number, e.g., [3,7]=8) :")
                 parser = self.CellAssignmentParser(string)
                 # call parser
@@ -2543,6 +2546,7 @@ class SudokuWhatIf:
                     ready = False       
             else:
                 print("Cell [" + + str(result[0]) + "," + str(result[1]) + "] already occupied")
+        # solve scenario and return result
         return scenarioSolver.solve(info=Info.PRETTY)
                     
           
