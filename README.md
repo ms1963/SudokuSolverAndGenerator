@@ -345,4 +345,4 @@ Example how to let SudokuSolver solve the new puzzle:
            
             
             
-            # turn the board into a string
+     
