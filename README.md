@@ -342,6 +342,9 @@ Example how to let SudokuSolver solve the new puzzle:
             solver.turnStringIntoBoard(intarray)
             # call the solver to solve the puzzle
             solver.solve(Info.PRETTY)
+            
+           
+An additional SudokuWhatIf class helps try scenarios when the solver gets stuck. In this case, the user can enter her own guesses and then see what happens. If these guesses lead to an invalid state, the SudouWhatIf implementation will return to the previous well known state from where other guesses are possible. 
            
             
             
