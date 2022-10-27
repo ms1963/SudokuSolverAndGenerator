@@ -1634,7 +1634,7 @@ class SudokuSolver:
             lines = []
             lines.append("        ")
             if isOccupant:
-                lines.append(" * " + str(number) + " *  ")
+                lines.append("  *" + str(number) + "*   ")
             else:
                 lines.append("   " + str(number) + "    ")
             lines.append("        ")
@@ -1668,15 +1668,15 @@ class SudokuSolver:
                     number = y # get occupant
                 
                 if not x: # cell is not occupied
-                    if size != 1: 
+                    if size <= 3: 
+                        line1 += filledString([])
+                        line2 += filledString(cell[0:3])
+                        line3 += filledString([])
+                    else:
                         line1 += filledString(cell[0:3])
                         line2 += filledString(cell[3:6])
                         line3 += filledString(cell[6:])
-                    else:
-                        lines = numberStrings(cell[0], isOccupant = False)
-                        line1 += lines[0]
-                        line2 += lines[1]
-                        line3 += lines[2]
+                        
                 else: # we are dealing with an occupied cell
                     lines = numberStrings(number, isOccupant = True)
                     line1 += lines[0]
@@ -2515,7 +2515,7 @@ if __name__ == "main":
 
 
 else:
-    SudokuShell().run(withCheating = False, withMonitoring = False)
+    SudokuShell().run(withCheating = False, withMonitoring = True)
 
 
 
