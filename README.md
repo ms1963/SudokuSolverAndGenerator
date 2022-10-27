@@ -323,3 +323,26 @@ extended with additional strategies.
 By using withCheating as argument to SudokuSolver, the solver might use cheating (= looking up a brute force solution).
 
 By using withMonitoring the program will monitor all calls of addInfluencer() that is responsible to add influencers :=: remove candidates in cells.
+
+Example how to use SudokuShell:
+
+            SudokuShell().run(withCheating = False, withMonitoring = False)
+
+Example how to use SudokuGenerator for creating a new puzzle:
+
+            # create a new puzzle 
+            board = generator.createSudoku(minimumOccupancy = 17)
+            
+Example how to let SudokuSolver solve the new puzzle:
+
+            # turn the board into a string
+            intarray = generator.turnIntoString(board)
+            # turn  the intarray to an internal data structure
+            # the solver understands
+            solver.turnStringIntoBoard(intarray)
+            # call the solver to solve the puzzle
+            solver.solve(Info.PRETTY)
+           
+            
+            
+            # turn the board into a string
