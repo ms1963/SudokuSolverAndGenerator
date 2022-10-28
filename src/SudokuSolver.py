@@ -2422,7 +2422,10 @@ class SudokuShell:
                             swi = SudokuWhatIf(solver)
                             result = swi.runScenario()
                             if result:
-                                completed = True
+                                print("Your guess was right")
+                            else: 
+                                print("Scenario did not work out")
+                            completed = result
                         elif wish == "n":
                             wrongAnswer = False
                             completed = True
@@ -2452,7 +2455,7 @@ class Tokens(Enum):
 class SudokuWhatIf:
     def __init__(self, solver):
         self.solver = deepcopy(solver)
-    
+        
     # parser for checking cell assigments the user types in such as [7, 9] = 6
     class CellAssignmentParser:
         def __init__(self, string):
@@ -2546,10 +2549,10 @@ class SudokuWhatIf:
         self.solver.printCandidatesAndInfluencers(candidates = True, title="LIST OF CANDIDATES")
 
         ready = False
-        while not ready: # loop until preconditions for scenariohold
+        while not ready: # loop until preconditions for scenario hold
             correct = False
             while not correct: # loop until the input is correct
-                string = input("Please, make a guess for a cell (format: [r,c] = number, e.g., [3,7]=8) :")
+                string = input("(SudokuWhatIf): Please, make a guess for a cell (format: [r,c] = number, e.g., [3,7]=8) :")
                 parser = self.CellAssignmentParser(string)
                 # call parser
                 result = parser.parse()
@@ -2561,12 +2564,12 @@ class SudokuWhatIf:
                 ready = True
                 # check whether board is conformant
                 if scenarioSolver.checkConformanceOfBoard() == False:
-                    print("Warning: this leads to an invalid board configuration.")
-                    print("Going back to start context.")
+                    print("(SudokuWhatIf): Warning: this leads to an invalid board configuration.")
+                    print("(SudokuWhatIf): Going back to start context.")
                     scenarioSolver = deepcopy(self.solver)
                     ready = False       
             else:
-                print("Cell [" + + str(result[0]) + "," + str(result[1]) + "] already occupied")
+                print("(SudokuWhatIf): Cell [" + str(result[0]) + "," + str(result[1]) + "] already occupied")
         # solve scenario and return result
         return scenarioSolver.solve(info=Info.PRETTY)
                     
