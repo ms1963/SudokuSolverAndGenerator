@@ -2019,9 +2019,29 @@ class SudokuSolver:
             if changes == 0: # no changes => cannot solve board any further 
                     print("I am stuck: cannot solve remaining cells with existing strategies.")
                     print("Candidates Listing for manual analysis:")
-                    self.printCandidatesAndInfluencers(candidates = True, title="LIST OF CANDIDATES")
-                    
-                    
+                    self.printCandidatesAndInfluencers(candidates = True, title="LIST OF CANDIDATES")        
+                    ready = False
+                    while not ready:
+                        value = input("(SudokuSolver): Enter w to write this state to file, q to quit, h to display help ---> ")
+                        match value:
+                            case 'q': 
+                                ready = True
+                            case 'w':
+                                rows = self.turnBoardIntoList()
+                                while True:
+                                    fname = input("* Enter name of output file: ")   
+                                    if os.path.isfile(fname):
+                                        print("  Error - file already exists. Use another filename.")
+                                        continue
+                                    elif len(fname) == 0:
+                                        print("  Error: Incorrect file name")
+                                        continue
+                                    else:
+                                        self.writeSudokuToCSV(fname, rows)    
+                                        print("Output File " + fname + " written !")
+                                        ready = True
+                                        break
+                                input("press any key to continue ")
                     return False
         if (self.isCompleted()): # successful completion of loop
             print("Success: board solved")
