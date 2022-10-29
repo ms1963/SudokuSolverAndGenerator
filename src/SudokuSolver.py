@@ -1961,7 +1961,8 @@ class SudokuSolver:
                         if self.monitoringActive:
                             print("Strategy used = " + msg)                     
                         if info != Info.NONE:   
-                            value = input("(SudokuSolver): Enter <any key> to continue, q to quit, h to display help ---> ")
+                            print("(SudokuSolver): Enter <any key> to continue, q to quit, h to display help ")
+                            value = input(" ---> ")
                             print()
                             match value:
                                 case "q": 
@@ -2021,8 +2022,9 @@ class SudokuSolver:
                     print("Candidates Listing for manual analysis:")
                     self.printCandidatesAndInfluencers(candidates = True, title="LIST OF CANDIDATES")        
                     ready = False
+                    print("(sudokuSolver): Enter w to write state to file, q to quit ")
                     while not ready:
-                        value = input("(SudokuSolver): Enter w to write this state to file, q to quit, h to display help ---> ")
+                        value = input(" ---> ")
                         match value:
                             case 'q': 
                                 ready = True
@@ -2374,15 +2376,30 @@ class SudokuShell:
     def run(cls, withCheating = False, withMonitoring = False):
         strategiesAlreadyDisplayed = False
         while True:
-            value = input("(SudokuShell): Enter any key to start new Sudoku puzzle, or q to quit ---> ")
+             # instantiate a new solver
+            solver = SudokuSolver(withCheating, withMonitoring)
+            print("(SudokuShell): Enter r to read an existing CSV file, q to quit, or other key to start new Sudoku")
+            value = input(" ---> ")
             print()
+            normalMode = False
             match value:
                 case "q":
                     print("Exiting from SudokuShell ...")
                     break
-                
-            # instantiate a new solver
-            solver = SudokuSolver(withCheating, withMonitoring)
+                case "r":
+                    completed = False
+                    while not completed:
+                        fname = input("* Enter name of output file: ")   
+                        if not os.path.isfile(fname):
+                            print("  Error - file not found.")               
+                        else:
+                            rows = solver.readSudokuFromCSV(fname)
+                            completed = True
+                            # adapt the result for the SudokuSolver
+                            solver.turnListIntoBoard(rows)
+                case other:
+                    normalMode = True
+                        
             if not strategiesAlreadyDisplayed and withMonitoring:
                 print("Identifying installed strategies ...")
                 print()
@@ -2395,17 +2412,18 @@ class SudokuShell:
                     print(type(strategy).__name__)
                 print()
                 strategiesAlreadyDisplayed = True
-            # instantiate a new generator
-            generator = SudokuGenerator()
-            print()
-            # create a new puzzle 
-            board = generator.createSudoku(minimumOccupancy = 17)
-            # turn the board into a string
-            intarray = generator.turnIntoString(board)
-            # turn  the intarray to an internal data structure
-            # the solver understands
-            solver.turnStringIntoBoard(intarray)
-            # call the solver to solve the puzzle
+            if normalMode:
+                # instantiate a new generator
+                generator = SudokuGenerator()
+                print()
+                # create a new puzzle 
+                board = generator.createSudoku(minimumOccupancy = 17)
+                # turn the board into a string
+                intarray = generator.turnIntoString(board)
+                # turn  the intarray to an internal data structure
+                # the solver understands
+                solver.turnStringIntoBoard(intarray)
+                # call the solver to solve the puzzle
             succeeded = solver.solve(Info.PRETTY)
             if succeeded:
                 print("SudokuSolver succeeded solving the puzzle!")
@@ -2472,11 +2490,17 @@ class SudokuWhatIf:
             if self.string[self.pos] == '[': 
                 self.pos += 1
                 return Tokens.OPAREN
+            elif self.string[self.pos] == "(": 
+                self.pos += 1
+                return Tokens.OPAREN
             elif self.string[self.pos] in ["1", "2", "3", "4", "5", "6", "7", "8", "9"]:
                 self.pos += 1
                 return int(self.string[self.pos-1])
             elif self.string[self.pos] == "]":
                 self.pos += 1                 
+                return Tokens.CPAREN
+            elif self.string[self.pos] == ")": 
+                self.pos += 1
                 return Tokens.CPAREN
             elif self.string[self.pos] == ',': 
                 self.pos+= 1
@@ -2495,7 +2519,7 @@ class SudokuWhatIf:
             # parse for [
             token = self.getNextToken()
             if token != Tokens.OPAREN:
-                print("Error: [ expected in pos " + str(1+self.pos))
+                print("Error: [ or ( expected in pos " + str(1+self.pos))
                 return None
             # parse for number in [1..9]
             token = self.getNextToken()
@@ -2519,7 +2543,7 @@ class SudokuWhatIf:
             # parse for ]
             token = self.getNextToken()
             if token != Tokens.CPAREN:
-                print("Error: ] expected in pos " + str(1+self.pos))
+                print("Error: ] or ) expected in pos " + str(1+self.pos))
                 return None
             # parse for =
             token = self.getNextToken()
@@ -2551,8 +2575,9 @@ class SudokuWhatIf:
         ready = False
         while not ready: # loop until preconditions for scenario hold
             correct = False
+            print("(SudokuWhatIf): Please, make a guess for a cell (format: [r,c] = number, e.g., [3,7]=8) ")
             while not correct: # loop until the input is correct
-                string = input("(SudokuWhatIf): Please, make a guess for a cell (format: [r,c] = number, e.g., [3,7]=8) :")
+                string = input(" ---> ")
                 parser = self.CellAssignmentParser(string)
                 # call parser
                 result = parser.parse()
