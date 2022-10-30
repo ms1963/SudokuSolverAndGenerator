@@ -763,7 +763,7 @@ class SudokuSolver:
                 # strategies work
                 if self.monitoringActive:
                         print("Adding influencers to board after occupying (" + str(i) + "," + str(j) + ")")
-                self.addInfluencersToRegion(number, i, j)
+                self.addInfluencerToRegionExclusive(number, i, j)
                 # call all strategies which may remove candidates
                 # from some cells which is equivalent to adding
                 # influencers
@@ -834,7 +834,7 @@ class SudokuSolver:
     def addInfluencerToRegionExclusive(self, number, i, j):
         self.addInfluencerToRow(number, i, [j])
         self.addInfluencerToColumn(number, j, [i])
-        self.addInfluencerToQuadrant(number, [(i,j)])
+        self.addInfluencerToQuadrant(number, (i-1)//dim+1, (j-1)//dim+1, [(i,j)])
         
     """    
     For rows or columns in a quadrant that have at least 1
@@ -2006,17 +2006,18 @@ class SudokuSolver:
                                             
                                             
                                 case "h":
-                                    print("***** Help *****")
-                                    print("press h for help")
-                                    print("press s for shuffling strategies")
-                                    print("press n for noninteractive mode")
-                                    print("press b to  save state in stack")
-                                    print("press r to  restore state from stack")
-                                    print("press w to  write Sudoku puzzle to a file")
-                                    print("press i to  inspect the current board w.r.t. influencers")
-                                    print("press c to  inspect the current board w.r.t. candidates")
-                                    print("press q to  quit this loop")
-                                    print()
+                                    print("""
+                                          ***** Help *****
+                                          press h for help
+                                                s for shuffling strategies
+                                                n for noninteractive mode
+                                                b to  save state in stack
+                                                r to  restore state from stack
+                                                w to  write Sudoku puzzle to a file
+                                                i to  inspect the current board w.r.t. influencers
+                                                c to  inspect the current board w.r.t. candidates
+                                                q to  quit this loop
+                                    """)
                                     input("press any key to continue ")
                                 case "i":
                                     self.printCandidatesAndInfluencers(candidates = False, title="LIST OF INFLUENCERS")
