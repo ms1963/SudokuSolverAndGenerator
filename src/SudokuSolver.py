@@ -1967,11 +1967,11 @@ class SudokuSolver:
                                     print("Exiting from SudokuSolver ...")
                                     return True # True because user aborts
                                 case "b":
-                                    print("Saving state to states[]")
+                                    print("Saving state to Persistence")
                                     while True:
                                         name = input(" Specify name ---> ")
-                                        if name != "" and not name in self.states.keys():
-                                            self.states[name] = deepcopy(self._data)
+                                        if name != "" and not name in StatePersistence().states.keys():
+                                            StatePersistence().states[name] = deepcopy(self._data)
                                             break
                                 case "w":
                                     rows = self.turnBoardIntoList()
@@ -1987,36 +1987,36 @@ class SudokuSolver:
                                             break
                                     input("press any key to continue ")
                                 case "r":
-                                    if len(self.states) == 0: 
+                                    if len(StatePersistence().states) == 0: 
                                         print("No state stored")
                                         continue
                                     else:
                                         print("Enter key of state to restore")
-                                        for key, value in self.states.items() :
+                                        for key, value in StatePersistence().states.items() :
                                             print(" - '" + str(key) + "'")
 
                                         completed = False
                                         while not completed:
                                             answer = input(" --> ")
-                                            completed = answer in self.states.keys()
+                                            completed = answer in StatePersistence().states.keys()
                                             if (completed):
-                                                self._data = self.states[answer]
+                                                self._data = StatePersistence().states[answer]
                                             else:
                                                 print("Invalid key")
                                             
                                             
                                 case "h":
                                     print("""
-                                          ***** Help *****
-                                          press h for help
-                                                s for shuffling strategies
-                                                n for noninteractive mode
-                                                b to  save state in stack
-                                                r to  restore state from stack
-                                                w to  write Sudoku puzzle to a file
-                                                i to  inspect the current board w.r.t. influencers
-                                                c to  inspect the current board w.r.t. candidates
-                                                q to  quit this loop
+        ***** Help *****
+        press     h for help
+                  s for shuffling strategies
+                  n for noninteractive mode
+                  b to  save state in stack
+                  r to  restore state from stack
+                  w to  write Sudoku puzzle to a file
+                  i to  inspect the current board w.r.t. influencers
+                  c to  inspect the current board w.r.t. candidates
+                  q to  quit this loop
                                     """)
                                     input("press any key to continue ")
                                 case "i":
@@ -2079,6 +2079,28 @@ class SudokuSolver:
         else: 
             return False
             
+"""
+The class StatePersistence defines methods to persist and restore boards.
+It is just a global dictionary implemented as a singleton.
+It does not provide functionality to save data to a file or restore
+data from a file. 
+"""          
+class StatePersistence:
+    # no __init__ constructor needed
+    _instance = None
+    def __new__(cls):
+        if cls._instance == None:
+            cls._instance = super(StatePersistence, cls).__new__(cls)
+            cls.states = {}
+        return cls._instance
+    
+    def persistState(cls, name, data):
+        cls.states[name] = deepcopy(data)
+        
+    def restoreState(cls, name):
+        return deepcopy(cls.states[name])
+        
+
 """
 The class PointingPairsAndTriplesStrategy implements an 
 Influence Strategy. If only 2 (or 3) cells in a quadrant 
@@ -2456,7 +2478,7 @@ class SudokuShell:
             if succeeded:
                 print("SudokuSolver succeeded solving the puzzle!")
             else:
-                print("SudokuSolver Failed solving the puzzle!")
+                print("SudokuSolver failed solving the puzzle!")
                 completed = False
                 while not completed:
                     wrongAnswer = True
