@@ -2611,7 +2611,9 @@ class SudokuWhatIf:
                 # when parser could recognize correct input, stop loop
                 if result != None: correct = True
             # check if cell is occupied
-            if not scenarioSolver.isOccupied(result[0], result[1]):
+            isVacant = not scenarioSolver.isOccupied(result[0], result[1])
+            containsCandidate = result[2] in scenarioSolver.getCandidates(result[0], result[1])
+            if isVacant and containsCandidate:
                 scenarioSolver.occupy(result[2], result[0], result[1])
                 ready = True
                 # check whether board is conformant
@@ -2621,7 +2623,10 @@ class SudokuWhatIf:
                     scenarioSolver = deepcopy(self.solver)
                     ready = False       
             else:
-                print("(SudokuWhatIf): Cell [" + str(result[0]) + "," + str(result[1]) + "] already occupied")
+                if not isVacant:
+                    print("(SudokuWhatIf): Cell [" + str(result[0]) + "," + str(result[1]) + "] already occupied")
+                else: # containsCandidate == False
+                    print("(SudokuWhatIf): Number " + str(result[2]) + " is not a candidate of cell [" + str(result[0]) + "," + str(result[1]) + "]")
         # solve scenario and return result
         return scenarioSolver.solve(info=Info.PRETTY)
                     
@@ -2756,7 +2761,7 @@ if __name__ == "main":
 
 
 else:
-    SudokuShell().run(withCheating = False, withMonitoring = True)
+    SudokuShell().run(withCheating = False, withMonitoring = False)
 
 
 
