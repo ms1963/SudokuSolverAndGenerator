@@ -1696,7 +1696,7 @@ class SudokuSolver:
             # print border of current row
             if r % 3 == 0:
                 print("----------------------------------------------------------------------------------")
-                print()
+                # print()
             else:
                 print()
         print("Legend: '* number *' specifies the occupant of a cell.")
