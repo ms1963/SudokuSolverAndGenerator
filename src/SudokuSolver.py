@@ -134,14 +134,16 @@ class SudokuSolver:
         
         ## add strategies ## 
         
+        
         # occupation strategies:
         
+        strategy = self.DeepCheckStrategy(self)
+        self.attachOccupationStrategy(strategy)
         strategy = self.OneCandidateLeftStrategy(self)
         self.attachOccupationStrategy(strategy)
         strategy = self.RemainingInfluencerStrategy(self)
         self.attachOccupationStrategy(strategy)
-        strategy = self.DeepCheckStrategy(self)
-        self.attachOccupationStrategy(strategy)
+       
         if self.withCheating:
             strategy = self.Cheating(self)
             self.attachOccupationStrategy(strategy)
@@ -163,9 +165,7 @@ class SudokuSolver:
     # deletes and reinitializes self._data
     # Note: registered strategies are left untouched
     def reinitialize(self):
-        self._data = []
-        for i in range(0,DIM*DIM): # init all entries
-            self._data.append((False,0,[]))
+        self._data = [(False,0,[]) for i in range(0, DIM*DIM)]
 
     def getInstalledInfluenceStrategies(self):
         strategyList = []
@@ -493,9 +493,6 @@ class SudokuSolver:
             for c_q in range(1, dim+1):
                 resultList.append(((d1-1)*dim+r_q, (d2-1)*dim+c_q))
         return resultList
-                
-            
-        
         
     # get the row a cell belongs to    
     def getRowOfCell(self, i, j):
@@ -1984,7 +1981,7 @@ class SudokuSolver:
                                 case "h":
                                     print("***** Help *****")
                                     print("press h for help")
-                                    print("press s for shuffling occupation strategies")
+                                    print("press s for shuffling strategies")
                                     print("press n for noninteractive mode")
                                     print("press w to  write Sudoku puzzle to a file")
                                     print("press i to  inspect the current board w.r.t. influencers")
@@ -1998,8 +1995,9 @@ class SudokuSolver:
                                     self.printCandidatesAndInfluencers(candidates = True, title="LIST OF CANDIDATES")
                                     #input("press any key to continue ")
                                 case "s":
-                                    print("Shuffling strategies ...")
+                                    print("Shuffling all strategies ...")
                                     shuffle(self.occupationStrategies)
+                                    shuffle(self.influenceStrategies)
                                 case "n":
                                     print("Enabling noninteractive mode ...")
                                     info = Info.NONE
@@ -2729,7 +2727,7 @@ if __name__ == "main":
 
 
 else:
-    SudokuShell().run(withCheating = False, withMonitoring = False)
+    SudokuShell().run(withCheating = False, withMonitoring = True)
 
 
 
