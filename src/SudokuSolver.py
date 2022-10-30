@@ -165,6 +165,7 @@ class SudokuSolver:
     # deletes and reinitializes self._data
     # Note: registered strategies are left untouched
     def reinitialize(self):
+        self.states = {}
         self._data = [(False,0,[]) for i in range(0, DIM*DIM)]
 
     def getInstalledInfluenceStrategies(self):
@@ -1958,13 +1959,20 @@ class SudokuSolver:
                         if self.monitoringActive:
                             print("Strategy used = " + msg)                     
                         if info != Info.NONE:   
-                            print("(SudokuSolver): Enter <any key> to continue, q to quit, h to display help ")
+                            print("(SudokuSolver): Enter <any key> to continue, q to quit, <cmd> for another command, h to display help about commands")
                             value = input(" ---> ")
                             print()
                             match value:
                                 case "q": 
                                     print("Exiting from SudokuSolver ...")
-                                    return False
+                                    return True # True because user aborts
+                                case "b":
+                                    print("Saving state to states[]")
+                                    while True:
+                                        name = input(" Specify name ---> ")
+                                        if name != "" and not name in self.states.keys():
+                                            self.states[name] = deepcopy(self._data)
+                                            break
                                 case "w":
                                     rows = self.turnBoardIntoList()
                                     while True:
@@ -1978,11 +1986,32 @@ class SudokuSolver:
                                             print("Output File " + fname + " written !")
                                             break
                                     input("press any key to continue ")
+                                case "r":
+                                    if len(self.states) == 0: 
+                                        print("No state stored")
+                                        continue
+                                    else:
+                                        print("Enter key of state to restore")
+                                        for key, value in self.states.items() :
+                                            print(" - '" + str(key) + "'")
+
+                                        completed = False
+                                        while not completed:
+                                            answer = input(" --> ")
+                                            completed = answer in self.states.keys()
+                                            if (completed):
+                                                self._data = self.states[answer]
+                                            else:
+                                                print("Invalid key")
+                                            
+                                            
                                 case "h":
                                     print("***** Help *****")
                                     print("press h for help")
                                     print("press s for shuffling strategies")
                                     print("press n for noninteractive mode")
+                                    print("press b to  save state in stack")
+                                    print("press r to  restore state from stack")
                                     print("press w to  write Sudoku puzzle to a file")
                                     print("press i to  inspect the current board w.r.t. influencers")
                                     print("press c to  inspect the current board w.r.t. candidates")
@@ -2376,7 +2405,7 @@ class SudokuShell:
         while True:
              # instantiate a new solver
             solver = SudokuSolver(withCheating, withMonitoring)
-            print("(SudokuShell): Enter r to read an existing CSV file, q to quit, or other key to start new Sudoku")
+            print("(SudokuShell): Enter rd to read an existing CSV file, q to quit, or other key to start new Sudoku")
             value = input(" ---> ")
             print()
             normalMode = False
@@ -2384,10 +2413,10 @@ class SudokuShell:
                 case "q":
                     print("Exiting from SudokuShell ...")
                     break
-                case "r":
+                case "rd":
                     completed = False
                     while not completed:
-                        fname = input("* Enter name of output file: ")   
+                        fname = input("* Enter name of input file: ")   
                         if not os.path.isfile(fname):
                             print("  Error - file not found.")               
                         else:
