@@ -344,7 +344,11 @@ Example how to let SudokuSolver solve the new puzzle:
             solver.solve(Info.PRETTY)
             
            
-An additional SudokuWhatIf class helps try scenarios when the solver gets stuck. In this case, the user can enter her own guesses and then see what happens. If these guesses lead to an invalid state, the SudokuWhatIf implementation will return to the previous well known state from where other guesses are possible. 
+An additional SudokuWhatIf class helps try scenarios when the solver gets stuck. In this case, the user can enter her own guesses and then see what happens. If these guesses lead to an invalid state, the SudokuWhatIf implementation will return to the previous well known state from where other guesses are possible.
+
+The class StatePersistence is a singleton that maintains states of the SudokuBoard. Users may leverage the commands b (= backup) and r (= restore) within SudokuSolver to save current states or restore them. Internally a dictionary is used for maintaining these states using user-defined names as keys. StatePersistence always creates deep copies of these states and returns deep copies of these states to ensure data protection. 
+
+Classes like Chain and ColoredChain were introduced to allow implementation of chaining in the future.
            
             
             
