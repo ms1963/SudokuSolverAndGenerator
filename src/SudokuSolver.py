@@ -806,7 +806,7 @@ class SudokuSolver:
                    
     # add influences of number in (i,j) without any exceptions
     # however, occupied cells are left untouched                
-    def addInfluencersToRegion(self, number, i, j):
+    def addInfluencerToRegionInclusive(self, number, i, j):
         (d1, d2, r, c) = self.inverseMapQuadrant(i, j)
         self.addInfluencerToQuadrant(number, d1, d2)
         self.addInfluencerToRow(number, i)
@@ -831,7 +831,7 @@ class SudokuSolver:
                     self.addInfluencer(number, i, j)
     
     # add influencers to region but do not change (i,j):                
-    def addInfluencerToRegion(self, number, i, j):
+    def addInfluencerToRegionExclusive(self, number, i, j):
         self.addInfluencerToRow(number, i, [j])
         self.addInfluencerToColumn(number, j, [i])
         self.addInfluencerToQuadrant(number, [(i,j)])
