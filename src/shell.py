@@ -56,7 +56,7 @@ class SudokuShell:
                         if not os.path.isfile(fname):
                             print("  Error - file not found.")               
                         else:
-                            rows = solver.readSudokuFromCSV(fname)
+                            rows = solver.board.readSudokuFromCSV(fname)
                             completed = True
                             # adapt the result for the SudokuSolver
                             solver.turnListIntoBoard(rows)
@@ -75,7 +75,7 @@ class SudokuShell:
                                 answer = input(" --> ")
                                 completed = answer in StatePersistence().keys()
                                 if (completed):
-                                    solver._data = StatePersistence().restoreState(answer)
+                                    solver.board._data = StatePersistence().restoreState(answer)
                                 else:
                                     print("Invalid key")
                             solver.steps = 0

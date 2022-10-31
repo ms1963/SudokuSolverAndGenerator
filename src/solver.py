@@ -37,6 +37,7 @@ from     memory  import StatePersistence
 from     chains  import Chain
 from     generator import SudokuGenerator
 from     strategy import OccupationStrategy, InfluenceStrategy
+from     board   import Board, DIM, dim
 
 
 
@@ -113,50 +114,56 @@ class SudokuSolver:
     # initialize it with new values
     # and register required (predefined) strategies
     def __init__(self, withCheating, withMonitoring):
-        self.reinitialize() # prepare board
-        self.occupationStrategies = [] # init strategies
-        self.influenceStrategies = []
+        self.board = None
         # withCheating == True => SudokuSolver uses Cheating:
         self.withCheating = withCheating 
         # obtaining messages about what is going on
         # internally:
         self.monitoringActive = withMonitoring
+        self.reinitialize() # prepare board
+        self.occupationStrategies = [] # init strategies
+        self.influenceStrategies = []
+        
         
         ## add strategies ## 
         
-        
         # occupation strategies:
         
-        strategy = self.DeepCheckStrategy(self)
+        strategy = self.DeepCheckStrategy(self.board)
         self.attachOccupationStrategy(strategy)
-        strategy = self.OneCandidateLeftStrategy(self)
+        strategy = self.OneCandidateLeftStrategy(self.board)
         self.attachOccupationStrategy(strategy)
-        strategy = self.RemainingInfluencerStrategy(self)
+        strategy = self.RemainingInfluencerStrategy(self.board)
         self.attachOccupationStrategy(strategy)
        
         if self.withCheating:
-            strategy = self.Cheating(self)
+            strategy = self.Cheating(self.board)
             self.attachOccupationStrategy(strategy)
         
         # influence strategies
-        strategy = self.XWingStrategy(self)
+        strategy = self.XWingStrategy(self.board)
         self.attachInfluenceStrategy(strategy)
-        strategy = self.SwordFishStrategy(self)
+        strategy = self.SwordFishStrategy(self.board)
         self.attachInfluenceStrategy(strategy)
-        strategy = self.HiddenPairsStrategy(self)
+        strategy = self.HiddenPairsStrategy(self.board)
         self.attachInfluenceStrategy(strategy)
-        strategy = self.HiddenTriplesStrategy(self)
+        strategy = self.HiddenTriplesStrategy(self.board)
         self.attachInfluenceStrategy(strategy)
-        strategy = PointingPairsAndTriplesStrategy(self)
+        strategy = PointingPairsAndTriplesStrategy(self.board)
         self.attachInfluenceStrategy(strategy)
-        strategy = self.IndirectInfluencersStrategy(self)
+        strategy = self.IndirectInfluencersStrategy(self.board)
         self.attachInfluenceStrategy(strategy)
         
     # deletes and reinitializes self._data
     # Note: registered strategies are left untouched
     def reinitialize(self):
         self.states = {}
-        self._data = [(False,0,[]) for i in range(0, DIM*DIM)]
+        data = [(False,0,[]) for i in range(0, DIM*DIM)]
+        self.board = Board(data)
+        if self.monitoringActive:
+            self.board.turnMonitoringOn()
+        else:
+            self.board.turnMonitoringOff()
 
     def getInstalledInfluenceStrategies(self):
         strategyList = []
@@ -344,229 +351,13 @@ class SudokuSolver:
             pass
             
         def applyStrategy(self, i, j):
-            if not self.board.isOccupied(i,j):
+            (x,y,z) = self.board.getElement(i,j)
+            if not x:
                 # calculating index 
                 idx = self.board.map(i,j)
                 # looking up solution in brute force table:
-                return int(self.board.solution[idx])
+                return int(self.board.solution[idx])           
     
-            
-    
-    ############# map methods ############# 
-    
-    # take user defined (i,j) and map it to internal index
-    # into the one-dimensional list _data[0..DIM*DIM]
-    def map(self, i, j):
-        return (i - 1) * DIM + j - 1
-    
-    # take user-defined quardant-relative (d1, d2, xi, xj) and convert
-    # it to internal index into one-dimensional list _data[0..DIM*DIM]
-    def mapQuadrant(self, d1, d2, xi, xj):
-        i = (d1-1)*dim + xi
-        j = (d2-1)*dim + xj
-        return self.map(i,j)
-        
-    # map internal index (to _data[0..DIM*DIM] to external coordinate
-    # (i,j) with i, j starting from 1
-    def inverseMapInternal(self, idx):
-        i = idx // DIM + 1
-        j = idx % DIM + 1
-        return (i, j)
-        
-    # take board coordinate (i, j) and map it to 
-    # quadrant-relative coordinate
-    def inverseMapQuadrant(self, i, j):
-        d1 = (i-1) // dim + 1
-        d2 = (j-1) // dim + 1
-        iq = i - (d1-1) * dim
-        jq = j - (d2-1) * dim
-        return (d1, d2, iq, jq)
-        
-    # map quadrant-relative coordinate to board-coordinate
-    def inverseMap(self, d1, d2, r, c):
-        return ((d1-1)*dim+r,((d2-1)*dim+c))
-    
-    ############# setter/getter methods ############# 
-    # these methods in combination with the map()-methods 
-    # build a wrapper over the low-level access to 
-    # elements in _data[]
-    
-    # get content of field
-    def getElement(self, i, j):
-        return self._data[self.map(i,j)]
-        
-    # set element of field
-    def setElement(self, i, j, xyz): 
-        self._data[self.map(i,j)] = xyz
-    
-    # get content of field in quadrant
-    def getElementInQuadrant(self, d1, d2, i, j):
-        return self._data[self.mapQuadrant(d1,d2,i,j)]
-        
-    def setElementInQuadrant(self, d1, d2, i, j, xyz):
-        self._data[self.mapQuadrant(d1,d2,i,j)] = xyz
-        
-    # get a row of the board with all information
-    def getRow(self, row):
-        result = []
-        for col in range(1, DIM+1):
-            (x,y,z) = self.getElement(row, col)
-            result.append((x,y,z))
-        return result
-        
-    # get a column of the board
-    def getColumn(self, col):
-        result = []
-        for row in range(1, DIM + 1):
-            (x,y,z) = self.getElement(row, col)
-            result.append((x,y,z))
-        return result
-        
-    # get a quadrant of the board
-    def getQuadrant(d1, d2):
-        resultlist = []
-        for row in range(1, dim+1):
-            temp = []
-            for col in range (1, dim+1):
-                cell = self.getElementInQuadrant(d1, d2, row, col) 
-                tmp.append(cell)
-            resultlist.append(tmp)
-        return resultlist
-        
-    # get the whole region that (i,j) can "see"
-    def getRegion(self, i, j):
-        resultList = []
-        # get all cells in same row
-        for col in range(1, DIM+1):
-            resultList.append((i, col))
-        # get all elements in same column
-        for row in range(1, DIM+1):
-            resultList.append((row, j))
-        # get all elements in same quadrant 
-        (d1,d2,r,c) = self.inverseMapQuadrant(i,j)
-        for r_q in range(1, dim+1):
-            for c_q in range(1, dim+1):
-                resultList.append(((d1-1)*dim+r_q, (d2-1)*dim+c_q))
-        return resultList
-        
-    # get the row a cell belongs to    
-    def getRowOfCell(self, i, j):
-        return self.getRow(i)
-        
-    # get the column a cell belongs to    
-    def getColumnOfCell(self, i, j):
-        return self.getColumn(j)
-        
-    # get the quadrant a cell belongs to
-    def getQuadrantOfCell(self, i, j):
-        (d1, d2, r, c) = self.inverseMapQuadrant(i,j)
-        return self.getQuadrant(d1,d2)
-        
-                
-    ############# vacancy/candidates/influencers methods ############# 
-    
-    # get all vacant cells of board 
-    def getVacancies(self):
-        vacancies=[]
-        for row in range(1,DIM+1):
-            for col in range(1, DIM+1):
-                if not self.isOccupied(row, col):
-                    vacancies.append((row, col))
-        return vacancies
-    
-    # get vacant neighbor cells in quadrant defined by (i,j)        
-    def getVacanciesInQuadrant(self, d1, d2, r, c):
-        vacancies =    []
-        for row in range(1,dim+1):
-            for col in range(1, dim+1):
-                if (row, col) == (r, c): continue
-                (x, y, z) = self.getElementInQuadrant(d1,d2, row, col)
-                if x: continue
-                else: vacancies.append((row, col))
-        return vacancies
-                
-    # get vacant neighbor cells in row i
-    def getVacanciesInRow(self, i, j):
-        vacancies =   []
-        for col in range(1, DIM+1):
-            if col == j: continue
-            (x, y, z) = self.getElement(i, col)
-            if x: continue
-            else: vacancies.append((i,col))
-        return vacancies
-        
-    # get vacant neighbor cells in column j
-    def getVacanciesInColumn(self, i, j):
-        vacancies =   []
-        for row in range(1, DIM+1):
-            if row == i: continue
-            (x, y, z) = self.getElement(row, j)
-            if x: continue
-            else: vacancies.append((row, j))
-        return vacancies
-        
-    # return number in cell(i,j) if available,
-    # otherwise return 0
-    def getOccupant(self, i, j):
-        (x, y, z) = self.getElement(i,j)
-        if x: 
-            return y
-        else: 
-            return 0
-            
-    # which other numbers already dominate this position?
-    # => these numbers are no candidates for this field        
-    def getInfluencers(self, i, j):
-        (x, y, z) = self.getElement(i,j)
-        if not x:
-            return z
-        else: 
-            return []
-       
-    # get potential candidates for this location
-    def getCandidates(self, i, j):
-        (x,y,z) = self.getElement(i,j)
-        if x: # occupied locations neither have 
-              # influencers nor candidates
-            return []
-        else:
-            infl = self.getInfluencers(i,j)
-            candidates = []
-            for num in range (1, DIM+1):
-                if not num in infl:
-                    candidates.append(num)
-            return candidates
-            
-    # calculate candidates from currently known influencers
-    def calcCandidates(self, z):
-        candidates = []
-        for num in range (1,DIM+1):
-            if not num in z:
-                candidates.append(num)
-        return candidates       
-        
-    ############# same row, column, box ########### 
-    
-    # these simple methods check whether two cells 
-    # are in the same row, column or quadrant
-    def inSameRow(self, cell1, cell2):
-        ic1, jc1 = cell1
-        ic2, jc2 = cell2
-        return ic1 == ic2 
-        
-    def inSameColumn(self, cell1, cell2):
-        ic1, jc1 = cell1
-        ic2, jc2 = cell2
-        return jc1 == jc2 
-        
-    def inSameQuadrant(self, cell1, cell2):
-        ic1, jc1 = cell1
-        ic2, jc2 = cell2
-        return (((ic1-1) / dim) == ((ic2-1) / dim)) and (((ic2-1) / dim) == ((ic2-1) / dim))
-
-    def inSameRegion(self, cell1, cell2):
-        return self.inSameRow(cell1, cell2) or self.inSameColumn(cell1, cell2) or self.inSameQuadrant(cell1, cell2)
-
 
     # method to build all permutations of a list 
     def permutations(self, list):
@@ -586,91 +377,7 @@ class SudokuSolver:
             return resultList
 
 
-    ############# check and search for candidates ########### 
-
-    # expects a cell which is a tuple (row, col)
-    # and checks whether cand is a candidate of cell
-    def cellContainsCandidate(self, cell, cand):
-        row,col = cell
-        return cand in self.getCandidates(row,col)
-        
-    # check in an array of cells ( = (row,col) ) 
-    # whether all cells contain cand as candidate
-    def cellsContainCandidate(self, cells, cand):
-        containCand = True
-        for cell in cells:
-            containCand = containCand and self.containsCandidate(sell, cand)
-        return containCand
     
-    # searches for common candidates in a list of cells
-    def searchForCommonCandidates(self, cells):
-        candList = []
-        for cand in range(1, DIM+1):
-            if self.containCandidate(cells, cand):
-                candList.append(cand)
-        return candList
-        
-    # the following three methods check for cells of a 
-    # row/column/quadrant that have n candidates
-        
-    def searchForNCandidatesInRow(self, n, row):
-        assert n >= 0 and row <= 9, "n must be between 0 and 9"
-        resSet = {}
-        for col in range(1, DIM+1):
-            candidates = self.getCandidates(row, col)
-            if len(candidates) == n:
-                resSet.add((row, col, set(candidates)))
-        return resSet
-                
-    def searchForNCandidatesInColumn(self, n, col):
-        assert n >= 0 and row <= 9, "n must be between 0 and 9"
-        resSet = {}
-        for row in range(1, DIM+1):
-            candidates = self.getCandidates(row, col)
-            if len(candidates) == n:
-                resSet.append((row, col, set(candidates)))
-        return resSet
-                
-    def searchForNCandidatesInQuadrant(self, n, d1, d2):
-        assert n >= 0 and row <= 9, "n must be between 0 and 9"
-        resSet = []
-        for row in range(1, dim+1):
-            for col in range(1, dim+1):
-                candidates = self.getCandidates((d1-1)*dim+row, (d2-1)*dim+col)
-                if len(candidates) == n:
-                    resSet.append(((d1-1)*dim+row, (d2-1)*dim+col, set(candidates)))
-        return resSet
-        
-    # the next three methods check for cells in a row/column/quadrant 
-    # that have only the specified candidates (set cands)
-    def searchForCandidatesInRow(self, cands, row):
-        assert n >= 0 and row <= 9, "n must be between 0 and 9"
-        resSet = {}
-        for result in self.searchForNCandidatesInRow(len(cands), row):
-            (i, j, candSet) = result
-            if candSet == cands:
-                resSet.add((i,j))
-        return resSet
-        
-    def searchForCandidatesInColumn(self, cands, col):
-        assert n >= 0 and row <= 9, "n must be between 0 and 9"
-        resSet = {}
-        for result in self.searchForNCandidatesInColumn(len(cands), col):
-            (i, j, candSet) = result
-            # using set to avoid dependency on order of elements
-            if candSet == cands:
-                resSet.add((i,j))
-        return resSet
-        
-    def searchForCandidatesInQuadrant(self, cands, d1, d2):
-        resSet = {}
-        for result in self.searchForNCandidatesInQuadrant(len(cands), d1, d2):
-            (i, j, candSet) = result
-            # using set to avoid dependency on order of elements
-            if candSet == cands:
-                resSet.add((i,j))
-        return resSet
-
     ############# occupation related methods ############
         
     # which number must be placed in this location?
@@ -679,7 +386,7 @@ class SudokuSolver:
                     
     def canBeOccupied(self, i, j):
         retVal = (0, "")
-        (x, y, z) = self.getElement(i,j) # get entry
+        (x, y, z) = self.board.getElement(i,j) # get entry
         if not x:
             for strategy in self.occupationStrategies:
                 result = strategy.applyStrategy(i,j)
@@ -693,7 +400,7 @@ class SudokuSolver:
     # called InfluenceStrategies
     def occupy(self, number, i, j):
         # get internal data for (i,j)
-        (x, y, z) = self.getElement(i,j)
+        (x, y, z) = self.board.getElement(i,j)
         # check if (i,j) is already occupied
         # this also ensures that no occupation
         # strategy gets an occupied cell passed
@@ -705,19 +412,19 @@ class SudokuSolver:
             x = True  # mark cell as occupied
             y = number # set number which occupies the cell
             z = [] # clear influencers
-            self.setElement(i,j, (x,y,z)) # update _data[]
-            if not self.checkConformanceOfBoard(): # check for conformance
+            self.board.setElement(i,j, (x,y,z)) # update _data[]
+            if not self.board.checkConformanceOfBoard(): # check for conformance
                 print("Error: rule violation in (" + str(i) + "," + str(j) + ") when entering " + str(number))
                 print("Restoring previous content")
                 (x, y, z) = (x_old, y_old, z_old)
-                self.setElement(i,j,(x,y,z))
+                self.board.setElement(i,j,(x,y,z))
             else:
                 # reanalyze the board, as some influencers have been 
                 # introduced by occupying (i,j), so that the occupation
                 # strategies work
                 if self.monitoringActive:
                         print("Adding influencers to board after occupying (" + str(i) + "," + str(j) + ")")
-                self.addInfluencerToRegionExclusive(number, i, j)
+                self.board.addInfluencerToRegionExclusive(number, i, j)
                 # call all strategies which may remove candidates
                 # from some cells which is equivalent to adding
                 # influencers
@@ -729,66 +436,11 @@ class SudokuSolver:
     # is position occupied. Other method would be 
     # to check for not ((i,j) in vacancies)        
     def isOccupied(self, i, j):
-        (x, y, z) = self.getElement(i,j)
+        (x, y, z) = self.board.getElement(i,j)
         return x        
 
         
-    ############# add influencer  methods ############# 
-    # this strategy eliminates the need for some other
-    # strategies such as PointingPairsAndTriples 
     
-    # add additional influencer to single cell(i,j). Note: 
-    # occupied cells are left untouched
-    def addInfluencer(self, number, i, j):
-        (x, y, z) = self.getElement(i,j)
-        if not x: # location is not occupied 
-            if not (number in z): # if not already in list
-                z.append(number) # add it to list
-                if self.monitoringActive:
-                    self.setElement(i,j,(x, y, z))
-                    print("addInfluencer called for (" + str(i) + "," + str(j) + ") adding " + str(number))
-           
-    # add influence to quadrant
-    def addInfluencerToQuadrant(self, number, d1, d2, exceptionList = []):
-        quad_row = (d1-1) * dim
-        quad_col = (d2-1) * dim
-        
-        for i in range(1, dim+1):
-            for j in range(1, dim+1):
-                if (i,j) not in exceptionList:
-                    self.addInfluencer(number, quad_row+i, quad_col+j)
-                   
-    # add influences of number in (i,j) without any exceptions
-    # however, occupied cells are left untouched                
-    def addInfluencerToRegionInclusive(self, number, i, j):
-        (d1, d2, r, c) = self.inverseMapQuadrant(i, j)
-        self.addInfluencerToQuadrant(number, d1, d2)
-        self.addInfluencerToRow(number, i)
-        self.addInfluencerToColumn(number, j)
-    
-    # add number as influencer to column j with the exceptions stated 
-    # by the exceptionList
-    def addInfluencerToColumn(self, number, j, exceptionList = []):
-        for i in range(1, DIM+1):
-            if not (i in exceptionList):
-                (x,y,z) = self.getElement(i,j)
-                if not x:
-                    self.addInfluencer(number, i, j)
-
-    # add number as influencer to row i with the exceptions stated 
-    # by the exceptionList
-    def addInfluencerToRow(self, number, i, exceptionList = []):
-        for j in range(1, DIM+1):
-            if not (j in exceptionList):
-                (x,y,z) = self.getElement(i,j)
-                if not x:
-                    self.addInfluencer(number, i, j)
-    
-    # add influencers to region but do not change (i,j):                
-    def addInfluencerToRegionExclusive(self, number, i, j):
-        self.addInfluencerToRow(number, i, [j])
-        self.addInfluencerToColumn(number, j, [i])
-        self.addInfluencerToQuadrant(number, (i-1)//dim+1, (j-1)//dim+1, [(i,j)])
         
     """    
     For rows or columns in a quadrant that have at least 1
@@ -821,8 +473,6 @@ class SudokuSolver:
     
     """
         
-
-
             
     ############# Indirect Influencers Strategy ############ 
     # This strategy may substiture other strategies such as 
@@ -1319,76 +969,44 @@ class SudokuSolver:
                             for n3 in range(n2+1, DIM+1):
                                 # search for hidden triples
                                 self.handleHiddenTriples(array, (n1,n2,n3))   
-    
-    ############# check conformance methods ############# 
-    
-    # check whether row conforms to rules, i.e., whether
-    # there are duplicates in a row               
-    def checkConformanceInRow(self, r):
-        numberList = []
-        for c in range(1,DIM+1):
-            (x,y,z) = self.getElement(r,c)
-            if x:
-                if y in numberList:
-                    print("Conflict: " + str(y) + " found twice in row " + str(r))
-                    return False
-                else:
-                    numberList.append(y)
+       
+    ############## reading in board from other formats ##############
+    # check string list for well-formating
+    def checkString(self, sl):
+        if len(sl) != DIM * DIM:
+            print("Error: wrong length of list: " + str(len(sl)))
+            return False
+     
+        for idx in range(0, DIM*DIM):
+            if sl[idx] in ['0','1','2','3','4','5','6','7','8','9']:
+                continue      
             else:
-                continue 
-        return True
+                print("Error: invalid char " + sl[idx] + " at " + str(i))
+                return False
+        return True 
     
-    # check whether column conforms to rules, i.e., whether
-    # there are duplicates in a column
-    def checkConformanceInColumn(self, c):
-        numberList = []
-        for r in range(1,DIM+1):
-            (x,y,z) = self.getElement(r,c)
-            if x:
-                if y in numberList:
-                    print("Conflict: " + str(y) + " found twice in column " + str(c))
-                    return False
-                else:
-                    numberList.append(y)
-            else:
-                continue
-        return True
+    # prepare a string list of a Sudoku and let 
+    # it be converted to internal board _data[]
+    def turnStringIntoBoard(self, sl):
+        sl = sl.replace(" ","") # removing blanks
+        assert(self.checkString(sl))
+        for idx in range(0, DIM*DIM):
+            val = int(sl[idx])
+            if val != 0:
+                self.occupy(val, idx // DIM + 1,  idx % DIM + 1)
+        self.vacancies = self.board.getVacancies()
         
-    # check whether quadrant conforms to rules, i.e., whether
-    # there are duplicates in the quadrant
-    def checkConformanceInQuadrant(self, d1, d2):
-        numberList = []
-        quadTop = (d1-1)*dim + 1
-        quadLeft = (d2-1)*dim + 1
-    
-        for i in range(0, dim):
-            for j in range(0, dim):
-                (x,y,z) = self.getElement(quadTop + i, quadLeft + j)
-                if x:
-                    if y in numberList:
-                        print("Conflict: " + str(y) + " found twice in quadrant (" + str(d1) + "," + str(d2) + ")")
-                        return False
-                    else:
-                        numberList.append(y)
-                else:
-                    continue
-        return True
-                           
-    # check whether whole board complies with rules, i.e., whether
-    # all columns, rows, and quadrants conform to rules
-    def checkConformanceOfBoard(self):
-        for c in range(1, DIM+1):
-            if not self.checkConformanceInColumn(c):
-                return False
-        for r in range(1, DIM+1):
-            if not self.checkConformanceInRow(r):
-                return False
-        for d1 in range(1, dim+1):
-            for d2 in range(1, dim+1):
-                if not self.checkConformanceInQuadrant(d1,d2):
-                    return False
-        return True
-    
+    # take a one-dimensional list and convert it to Sudoku board 
+    # but only if board conforms to Sudoku rules
+    def turnListIntoBoard(self, rows):
+        _data = deepcopy(self.board._data)
+        for i in range(0, DIM*DIM):
+            num = rows[i]
+            if num != 0:
+                self.occupy(num, i // DIM + 1, i % DIM + 1)
+        if not self.board.checkConformanceOfBoard(): # if invalid board
+            self.board = Board(_data)
+        self.vacancies = self.board.getVacancies()
     ############# display methods ############# 
              
     # display whole board 
@@ -1521,7 +1139,7 @@ class SudokuSolver:
         for i in range(1, DIM+1):
             row = []
             for j in range(1, DIM+1):
-                row.append(self.getOccupant(i,j))
+                row.append(self.board.getOccupant(i,j))
             # add row to intarray
             intarray.append(row)
         return intarray
@@ -1595,7 +1213,7 @@ class SudokuSolver:
                 cell = []
                 number = 0
                 # get Element at (r,c)
-                (x,y,z) = self.getElement(r,c)
+                (x,y,z) = self.board.getElement(r,c)
                 if not x: # unoccupied cell
                     # the unoccupied cell is instantiated with 
                     # candidates (if candidates == True) or 
@@ -1603,7 +1221,7 @@ class SudokuSolver:
                     if not candidates: # influencers are needed
                         cell = z
                     else:  # candidates are needed
-                        cell = self.calcCandidates(z)
+                        cell = self.board.calcCandidates(z)
                     size = len(cell) # measure length of cell
                 else: # occupied cell
                     number = y # get occupant
@@ -1642,162 +1260,15 @@ class SudokuSolver:
         print("        ' 1 2 3 '")
         print("        ' 4 5 6 '    specify the influencers or canadidates.")
         print("        ' 7     '")
-        
             
     
-        
-    ############# conversion methods   ############# 
-    
-    # check string list for well-formating
-    def checkString(self, sl):
-        if len(sl) != DIM * DIM:
-            print("Error: wrong length of list: " + str(len(sl)))
-            return False
-     
-        for idx in range(0, DIM*DIM):
-            if sl[idx] in ['0','1','2','3','4','5','6','7','8','9']:
-                continue      
-            else:
-                print("Error: invalid char " + sl[idx] + " at " + str(i))
-                return False
-        return True 
-    
-    # prepare a string list of a Sudoku and let 
-    # it be converted to internal board _data[]
-    def turnStringIntoBoard(self, sl):
-        sl = sl.replace(" ","") # removing blanks
-        assert(self.checkString(sl))
-        for idx in range(0, DIM*DIM):
-            val = int(sl[idx])
-            if val != 0:
-                self.occupy(val, idx // DIM + 1,  idx % DIM + 1)
-        self.vacancies = self.getVacancies()
-                        
-    # create string list from the current board
-    def turnBoardIntoString(self):
-        sl = ""
-        for idx in range(0, DIM*DIM):
-            (x,y,z) = self._data[idx]
-            if x:
-                sl += str(y)
-            else:
-                sl += str(0)
-        return sl
-            
-    ############# file I/O methods #############   
-          
-    # take the current Sudoku Board and convert it to list.
-    # operation does only work if board is conformant to rules
-    def turnBoardIntoList(self):
-        if self.checkConformanceOfBoard():
-            rows=[]
-            for i in range(0, DIM*DIM):
-                (x,y,z) = self._data[i]
-                if x:
-                    rows.append(y)
-                else:
-                    rows.append(0)
-            return rows
-        else:
-            return []
-        
-    # take a one-dimensional list and convert it to Sudoku board 
-    # but only if board conforms to Sudoku rules
-    def turnListIntoBoard(self, rows):
-        _data = self._data
-        self.reinitialize()
-        for i in range(0, DIM*DIM):
-            num = rows[i]
-            if num != 0:
-                self.occupy(num, i // DIM + 1, i % DIM + 1)
-        if not self.checkConformanceOfBoard(): # if invalid board
-            self._data = _data # restore old state
-        self.vacancies = self.getVacancies()
-    
-    # existing Sudoko board is read from CSV file and returned as 
-    # a list (one-dimensional)
-    # 
-    def readSudokuFromCSV(self, filename):
-        csv.register_dialect('excel', delimiter=';', quoting=csv.QUOTE_NONE)
-        counter = 0
-        rows = []
-
-        with open(filename, newline='') as f:
-            try: 
-                reader = csv.reader(f, delimiter=";")
-                print("... reading file " + filename + " ...")
-                print()
-                i = 0;
-                for row in reader:
-                    counter +=1;
-                    if len(row) != DIM:
-                        print("Error: row " + str(counter) + " requires " + str(DIM) + " entries")
-                        return []
-                    for j in range(0, DIM):
-                        rows.append(int(row[j]))
-            
-                if counter != DIM:
-                    print("Error: " + str(DIM) + " rows expected, not " + str(counter))
-                    return []
-                
-            except csv.Error as e:
-                print('file {}, line {}: {}'.format(filename, reader.line_num, e))
-        
-        return rows
-        
-    # write board given as rows to file using CSV-format.    
-    # one-dimensional row representing Sudoku board is stored 
-    # to CSV file using Excel-format 
-    # for example:
-    # 1; 0; 3; 0; 0; 0; 0; 0; 0 
-    # 2; 1; 4; 0; 0; 0; 0; 0; 0 
-    # .
-    # . 
-    # . 
-    # . 
-    # . 
-    # . 
-    # 0; 3; 1; 0; 0; 4; 7; 0; 0
-    # => DIM rows with DIM elements per row
-    def writeSudokuToCSV(self, filename, rows):
-        with open(filename, 'w', newline='') as csvfile:
-            writer = csv.writer(csvfile, delimiter=';',quoting=csv.QUOTE_NONE)
-            # cut rows in pieces 
-            print("... writing file " + filename + "...")
-            print()
-      
-            idx = 0
-            while idx < DIM * DIM:
-                row = []
-                for i in range(0, DIM):
-                    row.append(rows[i + idx])
-                writer.writerow(row)
-                idx += 9    
-                
-    ############# helper methods #############  
-    
-    # create list of all possible numbers between
-    # 1 and DIM
-    def fullListOfNumbers():
-        return [num for num in range(1, DIM+1)]
-        
-        
-    # find first vacancy using internal _data[]
-    # structure
-    def findFirstVacancy(self):
-        for idx in range(0, DIM*DIM):
-            (x,y,z) = self._data[idx]
-            if not x:
-                return self.inverseMapInternal(idx)
-        return (0,0)
-                
     ############# solver methods ############# 
 
     # checks whether all cells are occupied 
     # can also checked with vacancies == [] instead
     def isCompleted(self):
         for idx in range(0, DIM*DIM):
-            (x,y,z) = self._data[idx]
+            (x,y,z) = self.board._data[idx]
             if not x:
                 return False
         return True
@@ -1875,13 +1346,14 @@ class SudokuSolver:
     # info as argument specifies if and how the 
     # board should be displayed
     def solve(self, info = Info.PRETTY):
-        if not self.checkConformanceOfBoard(): # board must conform to rules
+        if not self.board.checkConformanceOfBoard(): # board must conform to rules
             print ("Error: board does not conform to Sudoku rules")
             return
         self.steps = 0
         if self.withCheating:
-            boardAsString = self.turnBoardIntoString()
-            self.solution = self.solveBF(boardAsString)
+            boardAsString = self.board.turnBoardIntoString()
+            solution = self.solveBF(boardAsString)
+            self.board.storeBFSolution(solution)
         if info == Info.PRETTY:
             self.prettyPrint(self.convertToIntArray())
         else: 
@@ -1909,10 +1381,10 @@ class SudokuSolver:
                                     while True:
                                         name = input(" Specify name ---> ")
                                         if name != "" and not name in StatePersistence().keys():
-                                            StatePersistence().persistState(name, self._data)
+                                            StatePersistence().persistState(name, self.board._data)
                                             break
                                 case "w":
-                                    rows = self.turnBoardIntoList()
+                                    rows = self.board.turnBoardIntoList()
                                     while True:
                                         fname = input("* Enter name of output file: ")   
                                         if os.path.isfile(fname):
@@ -1920,7 +1392,7 @@ class SudokuSolver:
                                         elif len(fname) == 0:
                                             print("  Error: Incorrect file name")
                                         else:
-                                            self.writeSudokuToCSV(fname, rows)    
+                                            self.board.writeSudokuToCSV(fname, rows)    
                                             print("Output File " + fname + " written !")
                                             break
                                     input("press any key to continue ")                       
@@ -1983,7 +1455,7 @@ class SudokuSolver:
                             case 'q': 
                                 ready = True
                             case 'w':
-                                rows = self.turnBoardIntoList()
+                                rows = self.board.turnBoardIntoList()
                                 while True:
                                     fname = input("* Enter name of output file: ")   
                                     if os.path.isfile(fname):
@@ -1993,7 +1465,7 @@ class SudokuSolver:
                                         print("  Error: Incorrect file name")
                                         continue
                                     else:
-                                        self.writeSudokuToCSV(fname, rows)    
+                                        self.board.writeSudokuToCSV(fname, rows)    
                                         print("Output File " + fname + " written !")
                                         ready = True
                                         break
@@ -2016,7 +1488,6 @@ provided as an external class instead of an internal
 class of SudokuSolver.
 
 """
-
 class PointingPairsAndTriplesStrategy(InfluenceStrategy):
     def __init__(self, board):
         self.board = board
@@ -2087,4 +1558,5 @@ class PointingPairsAndTriplesStrategy(InfluenceStrategy):
                 # iterate through all possible numbers
                 for n in range(1, DIM+1):
                     self.handlePointingPairsAndTriples(array, n)
-    
+            
+

@@ -115,11 +115,13 @@ class SudokuWhatIf:
 
     # run a what-if scenario
     def runScenario(self):
+        self.board = deepcopy(self.solver.board)
         # create a new scenarioSolver with an existing solver as input
         scenarioSolver = SudokuSolver(withCheating = False, withMonitoring = True)
+        self.solver.board = self.board
         for row in range(1, DIM+1):
             for col in range(1, DIM+1):
-                (x,y,z) = self.solver.getElement(row, col)
+                (x,y,z) = self.solver.board.getElement(row, col)
                 if x:
                     scenarioSolver.occupy(y, row, col)
         # display Sudoku board to run scenarios on
@@ -139,12 +141,12 @@ class SudokuWhatIf:
                 if result != None: correct = True
             # check if cell is occupied
             isVacant = not scenarioSolver.isOccupied(result[0], result[1])
-            containsCandidate = result[2] in scenarioSolver.getCandidates(result[0], result[1])
+            containsCandidate = result[2] in scenarioSolver.board.getCandidates(result[0], result[1])
             if isVacant and containsCandidate:
                 scenarioSolver.occupy(result[2], result[0], result[1])
                 ready = True
                 # check whether board is conformant
-                if scenarioSolver.checkConformanceOfBoard() == False:
+                if scenarioSolver.board.checkConformanceOfBoard() == False:
                     print("(SudokuWhatIf): Warning: this leads to an invalid board configuration.")
                     print("(SudokuWhatIf): Going back to start context.")
                     scenarioSolver = deepcopy(self.solver)
