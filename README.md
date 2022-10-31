@@ -1,5 +1,6 @@
 # Sudoku Solver, Generator and Shell
 
+
 Extensible Python code to generate and solve Sudoku puzzles
 applicable to standard Sudoku board with 9 x 9 positions (= cells) and
 digits in {1, 2, ..., 9}.
@@ -21,6 +22,9 @@ way:
 
 The 9x9-puzzle is structured into 3x3 quadrants that are numbered as (d1,d2) where d1 is the row and d2 is the column (d1,d2 in [1,3]).
 
+
+
+
 |Q1,1|              |Q1,2|              |Q1,3| <- d1 = 1
 
 
@@ -36,6 +40,8 @@ The 9x9-puzzle is structured into 3x3 quadrants that are numbered as (d1,d2) whe
 |                   
 d2 = 1              
 
+    
+    
     
     
     
