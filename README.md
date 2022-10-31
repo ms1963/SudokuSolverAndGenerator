@@ -191,7 +191,10 @@ Example skeleton:
 
 
 
+
+
 class MyStrategy(OccupationStrategy): # must be derived from Strategy
+
         def __init__(self, board):
             self.board = board
         
@@ -215,6 +218,7 @@ class MyStrategy(OccupationStrategy): # must be derived from Strategy
             # then 0 should be returned  
             # ... 
             return aNumber
+            
             
             
 In addition, the OccupationStrategy class defines a method applyStrategy
