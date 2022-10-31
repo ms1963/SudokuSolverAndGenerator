@@ -140,7 +140,7 @@ class SudokuShell:
                         else:
                             print("Please, answer y or n!")
                             
-SudokuShell().run(withMonitoring = False, withCheating = False)
+SudokuShell().run(withMonitoring = False, withCheating = True)
                             
 
 

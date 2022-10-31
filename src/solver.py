@@ -47,6 +47,7 @@ from xwingstrategy         import XWingStrategy
 from swordfishstrategy     import SwordFishStrategy
 from hiddenpairsstrategy   import HiddenPairsStrategy
 from hiddentriplesstrategy import HiddenTriplesStrategy
+from cheatstrategy         import Cheating
 
 
 

@@ -3,7 +3,7 @@
 # cell is unoccupied. If that is the case it 
 # looks up the number in a brute force solution
     
-from, board import Board
+from board import Board
 from strategy import OccupationStrategy
 
 class Cheating(OccupationStrategy): 
