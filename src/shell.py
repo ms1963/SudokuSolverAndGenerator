@@ -11,14 +11,17 @@ GNU GENERAL PUBLIC LICENSE
 # for creating and solving Sudoku puzzles
 # Its only method run() is intended as a command
 # shell that listens to user commands. 
+quit
 # q  <ret> quits the shell.
 # <ret> or any other character <ret> start 
 # a new puzzle.
 # It is implemented as a Singleton
 
-from solver import SudokuSolver, Info, SudokuWhatIf
-from generator import SudokuGenerator
 from memory import StatePersistence
+from solver import SudokuSolver, Info
+from whatif import SudokuWhatIf
+from generator import SudokuGenerator
+
 import os.path
 
 class SudokuShell:
