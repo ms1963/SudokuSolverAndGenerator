@@ -368,5 +368,7 @@ shell.py encapsulates the class SudokuShell.py as well as the main program. It i
 whatif.py is responsible for letting the user experiment with What-if scenarios, should the solver not be able to solve a puzzle.
 
 board.py comprises all functionality to manage and access the board storage.
+
+___strategy.py: implementation of a single occupation or influence strategy.
             
      
