@@ -186,6 +186,7 @@ DeepCheckStrategy in the code.
 
 Example skeleton:
 
+
 class MyStrategy(OccupationStrategy): # must be derived from Strategy
         def __init__(self, board):
             self.board = board
@@ -298,14 +299,21 @@ This package consist of the three core classes:
 
     SudokuSolver 
         and
+       Board
+        and
     SudokuGenerator
         and
-    SudokuShell.
+    SudokuShell
+    
+as well as additional support classes.
     
 The first one (SudokuSolver) helps solving Sudoku puzzles 
 (see above). 
 
-The second one (SudokuGenerator) is used to create new 
+The second class (Board) manages access to the board 
+as well as its persistence.
+
+The third one (SudokuGenerator) is used to create new 
 Sudoku puzzles. Its output may be transformed to a 
 string that may be used as input to SudokuSolver.
 
@@ -348,7 +356,7 @@ An additional SudokuWhatIf class helps try scenarios when the solver gets stuck.
 
 The class StatePersistence is a singleton that maintains states of the SudokuBoard. Users may leverage the commands b (= backup) and r (= restore) within SudokuSolver to save current states or restore them. Internally a dictionary is used for maintaining these states using user-defined names as keys. StatePersistence always creates deep copies of these states and returns deep copies of these states to ensure data protection. 
 
-Classes like Chain and ColoredChain were introduced to allow implementation of chaining in the future.
+Classes like Chain and ColoredChain in chains.py were introduced to allow implementation of chaining in the future.
            
            
 The implementation has been partitioned into multiple files:
