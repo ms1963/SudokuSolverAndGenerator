@@ -191,10 +191,7 @@ Example skeleton:
 
 
 
-
-
-class MyStrategy(OccupationStrategy): # must be derived from Strategy
-
+      class MyStrategy(OccupationStrategy):
         def __init__(self, board):
             self.board = board
         
