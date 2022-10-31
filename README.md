@@ -196,21 +196,21 @@ Example skeleton:
             self.board = board
         
         def applyToQuadrant(self, i, j):
-            # analye quadrant and return the number 
+            # analyze quadrant and return the number 
             # to be put in (i,j). If no number is found 
             # then 0 should be returned.
             # ... 
             return aNumber
                 
         def applyToColumn(self, i,j):
-            # analye column and return the number 
+            # analyze column and return the number 
             # to be put in (i,j). If no number is found 
             # then 0 should be returned  
             # ... 
             return aNumber
                 
         def applyToRow(self, i, j):
-            # analye row and return the number 
+            # analyze row and return the number 
             # to be put in (i,j). If no number is found 
             # then 0 should be returned  
             # ... 
