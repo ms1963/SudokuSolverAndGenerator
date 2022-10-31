@@ -174,14 +174,12 @@ class Board:
         return result
         
     # get a quadrant of the board
-    def getQuadrant(d1, d2):
+    def getQuadrant(self,d1, d2):
         resultlist = []
         for row in range(1, dim+1):
-            temp = []
             for col in range (1, dim+1):
                 cell = self.getElementInQuadrant(d1, d2, row, col) 
-                tmp.append(cell)
-            resultlist.append(tmp)
+                resultlist.append((cell[0], cell[1]))
         return resultlist
         
     # get the whole region that (i,j) can "see"
