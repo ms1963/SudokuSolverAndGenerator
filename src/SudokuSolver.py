@@ -1992,6 +1992,8 @@ class SudokuSolver:
         press     h for help
                   s for shuffling strategies
                   n for noninteractive mode
+                  a for activating Monitoring
+                  d for deactivating Monitoring
                   b to  save state in stack
                   w to  write Sudoku puzzle to a file
                   i to  inspect the current board w.r.t. influencers
@@ -1999,6 +2001,12 @@ class SudokuSolver:
                   q to  quit this loop
                                     """)
                                     input("press any key to continue ")
+                                case "a": 
+                                    self.monitoringActive = True
+                                    print("Monitoring activated")
+                                case "d":
+                                    self.monitoringActive = False
+                                    print("Monitoring deactivated")
                                 case "i":
                                     self.printCandidatesAndInfluencers(candidates = False, title="LIST OF INFLUENCERS")
                                 case "c":
