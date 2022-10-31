@@ -107,9 +107,12 @@ a two-dimensional array with indices going from 1 to 9 (if
 DIM is 9). 
 
 for example:
+
+
     self._data[self.map(i, j)] 
     represents the cell in 
     row i and column j with i,j in [1...9]
+    
     
 Instead of accessing the array in such a low-level way, it
 is possible to use getters and setters,
@@ -187,6 +190,7 @@ DeepCheckStrategy in the code.
 Example skeleton:
 
 
+
 class MyStrategy(OccupationStrategy): # must be derived from Strategy
         def __init__(self, board):
             self.board = board
@@ -212,10 +216,12 @@ class MyStrategy(OccupationStrategy): # must be derived from Strategy
             # ... 
             return aNumber
             
+            
 In addition, the OccupationStrategy class defines a method applyStrategy
 all its children inherit. This method is used to call the 
 apply()-methods for rows, columns, and quadrants. It basically
 is collecting the results of the other methods:
+    
     
         def applyStrategy(self, i, j):
             res = self.applyToQuadrant(i, j)
@@ -226,6 +232,7 @@ is collecting the results of the other methods:
                 return res
             res = self.applyToColumn(i, j)
             return res
+            
             
 You may override applyStrategy() in your own strategy class.
 Likewise, you may implement only one or even none of the other 
