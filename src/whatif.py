@@ -1,4 +1,8 @@
-""" 
+"""
+Distributed with:
+GNU GENERAL PUBLIC LICENSE
+                       Version 3, 29 June 2007
+ 
 SudokuWhatIf is used to run what-if-scenarios if SudokuSolver does not succeed.
 Users can specify guesses for cells and these scenarios will then be tested.
 Note that this functionality is currently very expermimental.
