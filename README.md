@@ -350,6 +350,19 @@ The class StatePersistence is a singleton that maintains states of the SudokuBoa
 
 Classes like Chain and ColoredChain were introduced to allow implementation of chaining in the future.
            
-            
+           
+The implementation has been partitioned to multiple files:
+
+solver.py contains the SudokuSolver, the SudokuWhatif scenario class as well as one strategy class. Their responsibility is to solve a Sudoku puzzle using different strategies.
+
+strategy.py implements the strategy base classes InfluenceStrategy and OccupationStrategy.
+
+memory.py provides class StatePersistence which helps storing and restoring Sudoku puzzles in memory.
+
+generator.py includes the SudokuGenerator class responsible for creating new puzzles.
+
+chains.py is not yet used, but offers the classes Chain and ColoredChain for dealing with chaining strategies.
+
+shell.py encapsulates the class SudokuShell.py as well as the main program. It illustrates how to facilitate the aforementioned classes.
             
      
