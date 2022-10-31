@@ -364,5 +364,9 @@ generator.py includes the SudokuGenerator class responsible for creating new puz
 chains.py is not yet used, but offers the classes Chain and ColoredChain for dealing with chaining strategies.
 
 shell.py encapsulates the class SudokuShell.py as well as the main program. It illustrates how to facilitate the aforementioned classes.
+
+whatif.py is responsible for letting the user experiment with What-if scenarios, should the solver not be able to solve a puzzle.
+
+board.py comprises all functionality to manage and access the board storage.
             
      
