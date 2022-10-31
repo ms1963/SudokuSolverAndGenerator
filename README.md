@@ -1,5 +1,7 @@
 # Sudoku Solver, Generator and Shell
-
+<p align="center">
+  <img src="1F55926A-7EDD-4A95-A364-9ACC4D59C491.jpeg" width="350" title="hover text">
+</p>
 
 Extensible Python code to generate and solve Sudoku puzzles
 applicable to standard Sudoku board with 9 x 9 positions (= cells) and
