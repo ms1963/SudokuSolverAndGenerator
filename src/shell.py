@@ -50,16 +50,21 @@ class SudokuShell:
                     print("Exiting from SudokuShell ...")
                     break
                 case "rd":
+                    repeat = 0
                     completed = False
-                    while not completed:
+                    while not completed and repeat < 3:
                         fname = input("* Enter name of input file: ")   
                         if not os.path.isfile(fname):
                             print("  Error - file not found.")               
+                            repeat += 1
                         else:
                             rows = solver.board.readSudokuFromCSV(fname)
                             completed = True
                             # adapt the result for the SudokuSolver
                             solver.turnListIntoBoard(rows)
+                    if not completed and repeat == 3:
+                        print("Action stopped")
+                        continue
                 case "r":
                         if StatePersistence().len() == 0: 
                             print("No state stored")

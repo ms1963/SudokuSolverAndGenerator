@@ -691,7 +691,7 @@ class SudokuSolver:
                                 case "q": 
                                     print("Exiting from SudokuSolver ...")
                                     return True # True because user aborts
-                                case "b":
+                                case "p":
                                     print("Saving state to Persistence")
                                     while True:
                                         name = input(" Specify name ---> ")
@@ -699,17 +699,21 @@ class SudokuSolver:
                                             StatePersistence().persistState(name, self.board._data)
                                             break
                                 case "w":
+                                    repeat = 0
                                     rows = self.board.turnBoardIntoList()
-                                    while True:
+                                    while True and repeat < 3:
                                         fname = input("* Enter name of output file: ")   
                                         if os.path.isfile(fname):
                                             print("  Error - file already exists. Use another filename.")
                                         elif len(fname) == 0:
                                             print("  Error: Incorrect file name")
+                                            repeat += 1
                                         else:
                                             self.board.writeSudokuToCSV(fname, rows)    
                                             print("Output File " + fname + " written !")
                                             break
+                                    if repeat == 3:
+                                        print("Action stopped")
                                     input("press any key to continue ")                       
                                 case "h":
                                     print("""
@@ -719,7 +723,7 @@ class SudokuSolver:
                   n for noninteractive mode
                   a for activating Monitoring
                   d for deactivating Monitoring
-                  b to  save state in stack
+                  p to  persist state in stack
                   w to  write Sudoku puzzle to a file
                   i to  inspect the current board w.r.t. influencers
                   c to  inspect the current board w.r.t. candidates
