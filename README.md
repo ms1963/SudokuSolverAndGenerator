@@ -370,5 +370,10 @@ whatif.py is responsible for letting the user experiment with What-if scenarios,
 board.py comprises all functionality to manage and access the board storage.
 
 ___strategy.py: implementation of a single occupation or influence strategy.
+
+
+To run the main programm start the shell:
+
+        %python shell.py
             
      
