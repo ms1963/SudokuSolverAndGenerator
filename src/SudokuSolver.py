@@ -1985,27 +1985,7 @@ class SudokuSolver:
                                             self.writeSudokuToCSV(fname, rows)    
                                             print("Output File " + fname + " written !")
                                             break
-                                    input("press any key to continue ")
-                                case "r":
-                                    if StatePersistence().len() == 0: 
-                                        print("No state stored")
-                                        continue
-                                    else:
-                                        print("Enter key of state to restore")
-                                        for key, value in StatePersistence().items():
-                                            print(" - '" + str(key) + "'")
-
-                                        completed = False
-                                        while not completed:
-                                            answer = input(" --> ")
-                                            completed = answer in StatePersistence().keys()
-                                            if (completed):
-                                                self._data = StatePersistence().restoreState(answer)
-                                            else:
-                                                print("Invalid key")
-                                        self.steps = 0
-                                            
-                                            
+                                    input("press any key to continue ")                       
                                 case "h":
                                     print("""
         ***** Help *****
@@ -2013,7 +1993,6 @@ class SudokuSolver:
                   s for shuffling strategies
                   n for noninteractive mode
                   b to  save state in stack
-                  r to  restore state from stack
                   w to  write Sudoku puzzle to a file
                   i to  inspect the current board w.r.t. influencers
                   c to  inspect the current board w.r.t. candidates
@@ -2696,7 +2675,7 @@ class SudokuShell:
         while True:
              # instantiate a new solver
             solver = SudokuSolver(withCheating, withMonitoring)
-            print("(SudokuShell): Enter rd to read an existing CSV file, q to quit, or other key to start new Sudoku")
+            print("(SudokuShell): Enter rd to read an existing CSV file, r to restore a board, q to quit, or other key to start new Sudoku")
             value = input(" ---> ")
             print()
             normalMode = False
@@ -2715,6 +2694,27 @@ class SudokuShell:
                             completed = True
                             # adapt the result for the SudokuSolver
                             solver.turnListIntoBoard(rows)
+                case "r":
+                        if StatePersistence().len() == 0: 
+                            print("No state stored")
+                            print()
+                            continue
+                        else:
+                            print("Enter key of state to restore")
+                            for key, value in StatePersistence().items():
+                                print(" - '" + str(key) + "'")
+
+                            completed = False
+                            while not completed:
+                                answer = input(" --> ")
+                                completed = answer in StatePersistence().keys()
+                                if (completed):
+                                    solver._data = StatePersistence().restoreState(answer)
+                                else:
+                                    print("Invalid key")
+                            solver.steps = 0
+                            print("State restored")
+                            print()                           
                 case other:
                     normalMode = True
                         
