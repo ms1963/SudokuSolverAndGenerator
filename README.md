@@ -15,9 +15,12 @@ cells.
 
 Goal: place numbers 1..DIM {1 .. 9} in each cell, so that after
 every step the following rule holds:
-there must be no identical numbers in any quadrant, row or 
+
++ there must be no identical numbers in any quadrant, row or 
 column.
-Game is over when all locations/cells on the board are occupied.
+
++ puzzle is solved when all locations/cells on the board are occupied.
+
 
 Internally, a Sudoku puzzle/board is considered in the following
 way:
