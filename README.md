@@ -256,9 +256,11 @@ do not need the method for your strategy:
 You may also leave out such a method completely such as in:
 
 
-   def applyToRow(self, i, j):
+  
+    def applyToRow(self, i, j):
         pass
-        
+    
+    
 
 To add your own influence strategy, your strategy class must
 have InfluenceStrategy as parent class:
