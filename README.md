@@ -14,7 +14,7 @@ consists of 3x3 quadrants each of which is a 3x3-matrix of
 cells.
 
 Goal: place numbers 1..DIM {1 .. 9} in each cell, so that after
-every step the following rule holds:
+every step the following rules hold:
 
 + there must be no identical numbers in any quadrant, row or 
 column.
