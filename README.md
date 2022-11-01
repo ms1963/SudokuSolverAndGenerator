@@ -26,23 +26,22 @@ The 9x9-puzzle is structured into 3x3 quadrants that are numbered as (d1,d2) whe
 
 
 
+-- d1 -->
 
-|Q1,1| | |Q1,2| |  |Q1,3| <- d1 = 1
-
-
-
-
-|Q2,1| | |Q2,2| |  |Q2,3| <- d1 = 2
+|Quadrant 1,1| | |Quadrant 1,2| |  |Quadrant 1,3|  
 
 
 
 
-|Q3,1| | |Q3,2| |  |Q3,3| -> d1 = 3
-   ^                   
-   |                   
-d2 = 1              
+|Quadrant 2,1| | |Quadrant 2,2| |  |Quadrant 2,3|
 
-    
+
+
+
+|Quadrant 3,1| | |Quadrant 3,2| |  |Quadrant 3,3|        
+
+| d2
+v
     
     
     
