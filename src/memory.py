@@ -4,10 +4,26 @@ GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
 
-The class StatePersistence defines methods to persist and restore boards.
+
+#############################################################
+Sudoku Solver and Generator, (c) 2022 by Michael Stal
+contains the classes SudokuSolver and SudokuGenerator
+requires: Python version >= 3.10
+-------------------------------------------------------------
+applicable to standard Sudoku board with 9 x 9 positions and
+digits in {1,2, ..., 9}
+=============================================================
+This package consist of the classes
+
+    StatePersistence
+    
+The class StatePersistence defines methods to persist and 
+restore boards.
 It is just a global dictionary implemented as a singleton.
-It does not provide functionality to save data to a file or restore
-data from a file. 
+It does not provide functionality to save data to a file or 
+restore data from a file. 
+     
+#############################################################
 """       
 
 from copy import deepcopy

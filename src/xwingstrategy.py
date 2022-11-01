@@ -1,11 +1,34 @@
-################## X-Wing  Strategy ####################### 
-# This strategy identifies two rows (or two columns) where
-# there are only two cells left which can be occupied with
-# a number called pivot. If these cells are also aligned
-# with respect to their columns (or rows) and build a 
-# rectangular formation, a so-called X-Wing, then we know
-# that in the two columns (or rows) we can remove the pivot
-# as a candidate from the aforementioned columns (or rows)
+"""
+Distributed with:
+GNU GENERAL PUBLIC LICENSE
+                       Version 3, 29 June 2007
+
+
+
+#############################################################
+Sudoku Solver and Generator, (c) 2022 by Michael Stal
+contains the classes SudokuSolver and SudokuGenerator
+requires: Python version >= 3.10
+-------------------------------------------------------------
+applicable to standard Sudoku board with 9 x 9 positions and
+digits in {1,2, ..., 9}
+=============================================================
+This package consist of the classes
+
+    XWingStrategy
+    
+This strategy identifies two rows (or two columns) where
+there are only two cells left which can be occupied with
+a number called pivot. If these cells are also aligned
+with respect to their columns (or rows) and build a 
+rectangular formation, a so-called X-Wing, then we know
+that in the two columns (or rows) we can remove the pivot
+as a candidate from the aforementioned columns (or rows)
+
+     
+#############################################################
+"""
+
 
 from board import Board, DIM, dim
 from strategy import InfluenceStrategy

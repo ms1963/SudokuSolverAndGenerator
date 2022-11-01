@@ -1,14 +1,28 @@
-
 """
 Distributed with:
 GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
 
+
+#############################################################
+Sudoku Solver and Generator, (c) 2022 by Michael Stal
+contains the classes SudokuSolver and SudokuGenerator
+requires: Python version >= 3.10
+-------------------------------------------------------------
+applicable to standard Sudoku board with 9 x 9 positions and
+digits in {1,2, ..., 9}
+=============================================================
+This package consist of the  classes
+
+    Chain, ColoredChain
+    
+    
 The classes Color, Chain, ColoredChain are introduced to support
 chaining strategies for SudokuSolver.
 They allow chain nodes with x, y as key, and listOfInfluencers, 
-Color as elements.
+Color as elements.            
+#############################################################
 """
 
 # Helper class for ColoredChain class 

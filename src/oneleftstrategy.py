@@ -1,8 +1,29 @@
-############ OneCandidateLeftStrategy ############ 
-# this strategy analyzes whether there is only
-# one candidate left for (i,j). If yes, this 
-# must be the right number to fill IndentationError
+"""
+Distributed with:
+GNU GENERAL PUBLIC LICENSE
+                       Version 3, 29 June 2007
 
+
+
+#############################################################
+Sudoku Solver and Generator, (c) 2022 by Michael Stal
+contains the classes SudokuSolver and SudokuGenerator
+requires: Python version >= 3.10
+-------------------------------------------------------------
+applicable to standard Sudoku board with 9 x 9 positions and
+digits in {1,2, ..., 9}
+=============================================================
+This package consist of the classes
+
+    OneCandidateLeftStrategy
+    
+this strategy analyzes whether there is only
+one candidate left for (i,j). If yes, this 
+must be the right number to fill IndentationError
+#############################################################
+"""
+############ OneCandidateLeftStrategy ############ 
+# 
 from board import Board, dim, DIM
 from strategy import OccupationStrategy
     

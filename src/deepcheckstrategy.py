@@ -1,9 +1,33 @@
+
+"""
+Distributed with:
+GNU GENERAL PUBLIC LICENSE
+                       Version 3, 29 June 2007
+
+
+
+#############################################################
+Sudoku Solver and Generator, (c) 2022 by Michael Stal
+contains the classes SudokuSolver and SudokuGenerator
+requires: Python version >= 3.10
+-------------------------------------------------------------
+applicable to standard Sudoku board with 9 x 9 positions and
+digits in {1,2, ..., 9}
+=============================================================
+This package consist of the classes
+
+    DeepCheckStrategy
+    
+this strategy takes all candidates
+of (i,j) and analyzes whether it 
+appears as influencer of all other
+vacant cells. If yes, it is the 
+number that should occupy (i,j)         
+     
+#############################################################
+"""
+
 ######### DeepCheckStrategy ######### 
-# this strategy takes all candidates
-# of (i,j) and analyzes whether it 
-# appears as influencer of all other
-# vacant cells. If yes, it is the 
-# number that should occupy (i,j)          
     
 from board import Board, DIM, dim
 from strategy import OccupationStrategy

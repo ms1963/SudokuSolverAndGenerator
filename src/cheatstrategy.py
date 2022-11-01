@@ -1,7 +1,32 @@
+
+"""
+Distributed with:
+GNU GENERAL PUBLIC LICENSE
+                       Version 3, 29 June 2007
+
+
+
+#############################################################
+Sudoku Solver and Generator, (c) 2022 by Michael Stal
+contains the classes SudokuSolver and SudokuGenerator
+requires: Python version >= 3.10
+-------------------------------------------------------------
+applicable to standard Sudoku board with 9 x 9 positions and
+digits in {1,2, ..., 9}
+=============================================================
+This package consist of the classes
+
+    Cheating
+    
+this strategy just searches whether a given
+cell is unoccupied. If that is the case it 
+looks up the number in a brute force solution
+     
+#############################################################
+"""
+
 ############ Cheating ############ 
-# this strategy just searches whether a given
-# cell is unoccupied. If that is the case it 
-# looks up the number in a brute force solution
+
     
 from board import Board
 from strategy import OccupationStrategy

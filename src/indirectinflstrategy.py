@@ -1,5 +1,24 @@
 
-"""    
+"""
+Distributed with:
+GNU GENERAL PUBLIC LICENSE
+                       Version 3, 29 June 2007
+
+
+
+#############################################################
+Sudoku Solver and Generator, (c) 2022 by Michael Stal
+contains the classes SudokuSolver and SudokuGenerator
+requires: Python version >= 3.10
+-------------------------------------------------------------
+applicable to standard Sudoku board with 9 x 9 positions and
+digits in {1,2, ..., 9}
+=============================================================
+This package consist of the classes
+
+    IndirectInfluencersStrategy
+     
+#############################################################
     For rows or columns in a quadrant that have at least 1
     free cell such as in the following examples (dim = 3):
         
@@ -29,6 +48,7 @@
     to the whole board.  
     
     """
+    
 ############# Indirect Influencers Strategy ############ 
 # This strategy may substiture other strategies such as 
 # HiddenPairs, PointingPairsAndTriples, ....

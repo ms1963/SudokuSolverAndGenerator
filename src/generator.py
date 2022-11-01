@@ -1,11 +1,27 @@
+   
 """
 Distributed with:
 GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
-           
-######################################################################           
+
+
+
+#############################################################
+Sudoku Solver and Generator, (c) 2022 by Michael Stal
+contains the classes SudokuSolver and SudokuGenerator
+requires: Python version >= 3.10
+-------------------------------------------------------------
+applicable to standard Sudoku board with 9 x 9 positions and
+digits in {1,2, ..., 9}
+=============================================================
+This package consist of the classes
+    SudokuGenerator
+
+    
 The class SudokuGenerator contains the method 
+
         createSudoku(self, minimumDependeny)
+        
 that creates a new Sudoku puzzle that only has one unique solution. 
 In the argument minimumDependeny users can specify how many cells
 should be occupied (recommendation: use >= 17). 
@@ -15,7 +31,7 @@ Using the method
         turnIntoString(self, board)
 the board may be transformed into a string to be used as an input
 for class SudokuSolver.        
-######################################################################
+#################################################################
 """
 
 from     random  import shuffle

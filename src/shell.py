@@ -3,19 +3,36 @@
 Distributed with:
 GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
-""" 
 
-################## class SudokuShell ################## 
-# this class illustrates how to use the classes
-# SudokuSolver and SudokuGenerator in conjunction 
-# for creating and solving Sudoku puzzles
-# Its only method run() is intended as a command
-# shell that listens to user commands. 
+
+
+#############################################################
+Sudoku Solver and Generator, (c) 2022 by Michael Stal
+contains the classes SudokuSolver and SudokuGenerator
+requires: Python version >= 3.10
+-------------------------------------------------------------
+applicable to standard Sudoku board with 9 x 9 positions and
+digits in {1,2, ..., 9}
+=============================================================
+This package consist of the classes
+
+    SudokuShell
+     
+this class illustrates how to use the classes
+SudokuSolver and SudokuGenerator in conjunction 
+for creating and solving Sudoku puzzles
+Its only method run() is intended as a command
+shell that listens to user commands. 
 quit
-# q  <ret> quits the shell.
-# <ret> or any other character <ret> start 
-# a new puzzle.
-# It is implemented as a Singleton
+q  <ret> quits the shell.
+<ret> or any other character <ret> start 
+a new puzzle.
+It is implemented as a Singleton
+    
+
+#############################################################
+"""
+
 
 from memory import StatePersistence
 from solver import SudokuSolver, Info

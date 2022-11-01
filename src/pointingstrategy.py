@@ -1,4 +1,23 @@
+
 """
+Distributed with:
+GNU GENERAL PUBLIC LICENSE
+                       Version 3, 29 June 2007
+
+
+
+#############################################################
+Sudoku Solver and Generator, (c) 2022 by Michael Stal
+contains the classes SudokuSolver and SudokuGenerator
+requires: Python version >= 3.10
+-------------------------------------------------------------
+applicable to standard Sudoku board with 9 x 9 positions and
+digits in {1,2, ..., 9}
+=============================================================
+This package consist of the classes
+
+    PointingPairsAndTriplesStrategy
+    
 The class PointingPairsAndTriplesStrategy implements an 
 Influence Strategy. If only 2 (or 3) cells in a quadrant 
 have the candidate c and f all these cells are located
@@ -7,7 +26,9 @@ in any remaining cells of this row (or column).
 In contrast to other strategies this stratgey is 
 provided as an external class instead of an internal
 class of SudokuSolver.
+    
 
+#############################################################
 """
 
 from strategy import InfluenceStrategy

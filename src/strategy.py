@@ -2,13 +2,40 @@
 Distributed with:
 GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
+
+
+
+#############################################################
+Sudoku Solver and Generator, (c) 2022 by Michael Stal
+contains the classes SudokuSolver and SudokuGenerator
+requires: Python version >= 3.10
+-------------------------------------------------------------
+applicable to standard Sudoku board with 9 x 9 positions and
+digits in {1,2, ..., 9}
+=============================================================
+This package consist of the classes
+
+    OccupationStrategy, InfluenceStrategy
+  
+OccupationStrategy      
+  defines a trait all concrete strategies
+  need to implement. applyStrategy is the only 
+  method implemented in the base class respectively 
+  trait Strategy
+  
+InfluenceStrategy
+  if there are one, two, or three vacant cells in a row/column 
+  of a quadrant and the candidates for these cells accord to 
+  the number of vacant cells, then we know that eventually 
+  the vacant cells will be occupied by the candidates add 
+  thus we know for certain that these candidates will become
+  influencers for the rest of the board
+    
+
+#############################################################
 """
 
-######### Abstract Occupation Strategy base class #########   
-# defines a trait all concrete strategies
-# need to implement. applyStrategy is the only 
-# method implemented in the base class respectively 
-# trait Strategy
+
 class OccupationStrategy:
     # constructor expects Board instance on which
     # the strategy instance is supposed to operate
@@ -42,13 +69,7 @@ class OccupationStrategy:
     def applyToRow(self, i, j):
         pass
         
-############# indirect influencers strategy class ############# 
-# if there are one, two, or three vacant cells in a row/column 
-# of a quadrant and the candidates for these cells accord to 
-# the number of vacant cells, then we know that eventually 
-# the vacant cells will be occupied by the candidates add 
-# thus we know for certain that these candidates will become
-# influencers for the rest of the board
+
     
     
 ############# Base class for all influence strategies ############ 

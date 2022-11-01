@@ -2,10 +2,27 @@
 Distributed with:
 GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
- 
-SudokuWhatIf is used to run what-if-scenarios if SudokuSolver does not succeed.
-Users can specify guesses for cells and these scenarios will then be tested.
+
+
+
+#############################################################
+Sudoku Solver and Generator, (c) 2022 by Michael Stal
+contains the classes SudokuSolver and SudokuGenerator
+requires: Python version >= 3.10
+-------------------------------------------------------------
+applicable to standard Sudoku board with 9 x 9 positions and
+digits in {1,2, ..., 9}
+=============================================================
+This package consist of the classes
+
+    SudokuWhatIf
+     
+SudokuWhatIf is used to run what-if-scenarios if SudokuSolver 
+does not succeed.
+Users can specify guesses for cells and these scenarios will 
+then be tested.
 Note that this functionality is currently very expermimental.
+#############################################################
 """
 
 # Token values: helper class for CellAssignmentParser

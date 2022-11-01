@@ -1,10 +1,35 @@
+"""
+Distributed with:
+GNU GENERAL PUBLIC LICENSE
+                       Version 3, 29 June 2007
+
+
+
+#############################################################
+Sudoku Solver and Generator, (c) 2022 by Michael Stal
+contains the classes SudokuSolver and SudokuGenerator
+requires: Python version >= 3.10
+-------------------------------------------------------------
+applicable to standard Sudoku board with 9 x 9 positions and
+digits in {1,2, ..., 9}
+=============================================================
+This package consist of the classes
+
+    RemainingInfluencersStrategy
+    
+this strategy searches for other vacant cells 
+and checks whether there is an influencer that 
+appears in all of these vacant cells. Since 
+the number can not be a candidate in all 
+other vacant cells, it must be the number that 
+should be put into (i,j)
+    
+
+#############################################################
+"""
+
 ######### RemainingInfluencerStrategy #########           
-# this strategy searches for other vacant cells 
-# and checks whether there is an influencer that 
-# appears in all of these vacant cells. Since 
-# the number can not be a candidate in all 
-# other vacant cells, it must be the number that 
-# should be put into (i,j)
+
 
 from board import Board, DIM, dim
 from strategy import OccupationStrategy
