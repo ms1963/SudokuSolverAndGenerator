@@ -377,23 +377,23 @@ Classes like Chain and ColoredChain in chains.py were introduced to allow implem
            
 The implementation has been partitioned into multiple files:
 
-solver.py contains the SudokuSolver, the SudokuWhatif scenario class as well as one strategy class. Their responsibility is to solve a Sudoku puzzle using different strategies.
++ solver.py contains the SudokuSolver, the SudokuWhatif scenario class as well as one strategy class. Their responsibility is to solve a Sudoku puzzle using different strategies.
 
-strategy.py implements the strategy base classes InfluenceStrategy and OccupationStrategy.
++ strategy.py implements the strategy base classes InfluenceStrategy and OccupationStrategy.
 
-memory.py provides class StatePersistence which helps storing and restoring Sudoku puzzles in memory.
++ memory.py provides class StatePersistence which helps storing and restoring Sudoku puzzles in memory.
 
-generator.py includes the SudokuGenerator class responsible for creating new puzzles.
++ generator.py includes the SudokuGenerator class responsible for creating new puzzles.
 
-chains.py is not yet used, but offers the classes Chain and ColoredChain for dealing with chaining strategies.
++ chains.py is not yet used, but offers the classes Chain and ColoredChain for dealing with chaining strategies.
 
-shell.py encapsulates the class SudokuShell.py as well as the main program. It illustrates how to facilitate the aforementioned classes.
++ shell.py encapsulates the class SudokuShell.py as well as the main program. It illustrates how to facilitate the aforementioned classes.
 
-whatif.py is responsible for letting the user experiment with What-if scenarios, should the solver not be able to solve a puzzle.
++ whatif.py is responsible for letting the user experiment with What-if scenarios, should the solver not be able to solve a puzzle.
 
-board.py comprises all functionality to manage and access the board storage.
++ board.py comprises all functionality to manage and access the board storage.
 
-___strategy.py: implementation of a single occupation or influence strategy.
++ XXXstrategy.py: implementation of a single occupation or influence strategy.
 
 
 To run the main programm start the shell:
