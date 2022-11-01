@@ -28,19 +28,20 @@ The 9x9-puzzle is structured into 3x3 quadrants that are numbered as (d1,d2) whe
 
 -- d1 -->
 
-|Quadrant 1,1| | |Quadrant 1,2| |  |Quadrant 1,3|  
+|Quadrant 1,1|      |     |Quadrant 1,2|      |     |Quadrant 1,3|  
 
 
 
 
-|Quadrant 2,1| | |Quadrant 2,2| |  |Quadrant 2,3|
+|Quadrant 2,1|      |     |Quadrant 2,2|      |     |Quadrant 2,3|
 
 
 
 
-|Quadrant 3,1| | |Quadrant 3,2| |  |Quadrant 3,3|        
+|Quadrant 3,1|      |     |Quadrant 3,2|      |     |Quadrant 3,3|       
 
-| d2
+d2
+| 
 v
     
     
