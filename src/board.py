@@ -157,12 +157,12 @@ class Board:
     def setElementInQuadrant(self, d1, d2, i, j, xyz):
         self._data[self.mapQuadrant(d1,d2,i,j)] = xyz
         
-    # get a row of the board with all information
+    # get a row of the board 
     def getRow(self, row):
         result = []
         for col in range(1, DIM+1):
             (x,y,z) = self.getElement(row, col)
-            result.append((x,y,z))
+            result.append((x,y))
         return result
         
     # get a column of the board
@@ -170,7 +170,7 @@ class Board:
         result = []
         for row in range(1, DIM + 1):
             (x,y,z) = self.getElement(row, col)
-            result.append((x,y,z))
+            result.append((x,y))
         return result
         
     # get a quadrant of the board
@@ -349,15 +349,15 @@ class Board:
     def cellsContainCandidate(self, cells, cand):
         containCand = True
         for cell in cells:
-            containCand = containCand and self.containsCandidate(sell, cand)
+            containCand = containCand and self.containsCandidate(cell, cand)
         return containCand
     
     # searches for common candidates in a list of cells
     def searchForCommonCandidates(self, cells):
-        candList = []
+        candList = {}
         for cand in range(1, DIM+1):
             if self.containCandidate(cells, cand):
-                candList.append(cand)
+                candList.add(cand)
         return candList
         
     # the following three methods check for cells of a 
@@ -378,17 +378,17 @@ class Board:
         for row in range(1, DIM+1):
             candidates = self.getCandidates(row, col)
             if len(candidates) == n:
-                resSet.append((row, col, set(candidates)))
+                resSet.add((row, col, set(candidates)))
         return resSet
                 
     def searchForNCandidatesInQuadrant(self, n, d1, d2):
         assert n >= 0 and row <= 9, "n must be between 0 and 9"
-        resSet = []
+        resSet = {}
         for row in range(1, dim+1):
             for col in range(1, dim+1):
                 candidates = self.getCandidates((d1-1)*dim+row, (d2-1)*dim+col)
                 if len(candidates) == n:
-                    resSet.append(((d1-1)*dim+row, (d2-1)*dim+col, set(candidates)))
+                    resSet.add(((d1-1)*dim+row, (d2-1)*dim+col, set(candidates)))
         return resSet
         
     # the next three methods check for cells in a row/column/quadrant 
