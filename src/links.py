@@ -70,7 +70,7 @@ class Links:
             # we have found a strong link wrt. num
             if len(cellsWithCandidate) == 2:
                 # both directions are a strong link
-                link1 = (mum, cellsWithCandidate[0], cellsWithCandidate[1])
+                link1 = (num, cellsWithCandidate[0], cellsWithCandidate[1])
                 link2 = (num, cellsWithCandidate[1], cellsWithCandidate[0])
                 # thus, append these links to the strongLink
                 # section of candidate num
@@ -88,14 +88,14 @@ class Links:
                 if len(candsInCell1) == 2:
                     cand1 = candsInCell1[0]
                     cand2 = candsInCell1[1]
-                    self.innerLinks[cand1].append((i1, j1), cand1, cand2)
-                    self.innerLinks[cand2].append((i1, j1), cand2, cand1)
+                    self.innerLinks[cand1].append(((i1, j1), cand1, cand2))
+                    self.innerLinks[cand2].append(((i1, j1), cand2, cand1))
                 # and number 2
                 if len(candsInCell2) == 2:
                     cand1 = candsInCell2[0]
                     cand2 = candsInCell2[1]
-                    self.innerLinks[cand1].append((i1, j1), cand1, cand2)
-                    self.innerLinks[cand2].append((i1, j1), cand2, cand1)
+                    self.innerLinks[cand1].append(((i1, j1), cand1, cand2))
+                    self.innerLinks[cand2].append(((i1, j1), cand2, cand1))
             # if there are more than two cells with the same candidate, each
             # pair defines a weak link w.r.t. num
             elif len(cellsWithCandidate) > 2:
@@ -117,13 +117,13 @@ class Links:
                         if len(candsInCell1) == 2:
                             cand1 = candsInCell1[0]
                             cand2 = candsInCell1[1]
-                            self.innerLinks[cand1].append((i1, j1), cand1, cand2)
-                            self.innerLinks[cand2].append((i1, j1), cand2, cand1)
+                            self.innerLinks[cand1].append(((i1, j1), cand1, cand2))
+                            self.innerLinks[cand2].append(((i1, j1), cand2, cand1))
                         if len(candsInCell2) == 2:
                             cand1 = candsInCell2[0]
                             cand2 = candsInCell2[1]
-                            self.innerLinks[cand1].append((i1, j1), cand1, cand2)
-                            self.innerLinks[cand2].append((i1, j1), cand2, cand1)
+                            self.innerLinks[cand1].append(((i1, j1), cand1, cand2))
+                            self.innerLinks[cand2].append(((i1, j1), cand2, cand1))
     
     
     # search all rows for links    
