@@ -399,7 +399,7 @@ The implementation has been partitioned into multiple files:
 
 + XXXstrategy.py: implementation of a single occupation or influence strategy.
 
-+ links.py comprises the class Links used to find weak and strong links (between cells), inner links (within cell). A strong link is a link between two cells in the same column, row, quadrant if these are the only ones to contain a candidate. We know: if the candidate is not the one that is occupying one cell, it must occupy the other. A weak link is a link between a pair of cell in a row, column, quadrant containing a candidate, but there are further cells in the same row, column, candidate that same candidate. We know that if a candidate occupies one cell of the link, it does not occupy the other(s). The Links class stores finds these links and puts it in its own vector of links regarding a particular candidate.
++ links.py comprises the class Links used to find weak and strong links (between cells), inner links (within cell). A strong link is a link between two cells in the same column, row, quadrant if these are the only ones to contain a candidate. We know: if the candidate is not the one that is occupying one cell, it must occupy the other. A weak link is a link between a pair of cell in a row, column, quadrant containing a candidate, but there are further cells in the same row, column, candidate that same candidate. We know that if a candidate occupies one cell of the link, it does not occupy the other(s). The Links class finds and stores these links and puts it in its own vector of links regarding a particular candidate. It is leveraged in more complex chaining strategies.
 
 
 To run the main programm start the shell:
