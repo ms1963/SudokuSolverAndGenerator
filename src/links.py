@@ -49,7 +49,7 @@ class Links:
     # candidate
     def findCandidateInCells(self, num, cells):
         cellsWithCandidate = []
-        for (i,j) in cells: # iterale all cells 
+        for (i,j) in cells: # iterate all cells 
             # is num acandidate in this cell
             if num in self.board.getCandidates(i, j):
                 # yes, then store it in list
@@ -78,7 +78,7 @@ class Links:
                 self.strongLinks[num].append(links)
                 # now let us analyze whether there is a cell 
                 # that obly contains 2 candidates. If yes, we got
-                # strong links between tow candidates of the same cell
+                # strong links between two candidates of the same cell
                 (i1, j1) = link1
                 (i2, j2) = link2
                 # we check this for both cells
@@ -88,23 +88,23 @@ class Links:
                 if len(candsInCell1) == 2:
                     cand1 = candsInCell1[0]
                     cand2 = candsInCell1[1]
-                    self.innerLinks[cand1].append((i1, j1), cand1, cands2)
-                    self.innerLinks[cand2].append((i1, j1), cand2, cands1)
+                    self.innerLinks[cand1].append((i1, j1), cand1, cand2)
+                    self.innerLinks[cand2].append((i1, j1), cand2, cand1)
                 # and number 2
                 if len(candsInCell2) == 2:
                     cand1 = candsInCell2[0]
                     cand2 = candsInCell2[1]
-                    self.innerLinks[cand1].append((i1, j1), cand1, cands2)
-                    self.innerLinks[cand2].append((i1, j1), cand2, cands1)
+                    self.innerLinks[cand1].append((i1, j1), cand1, cand2)
+                    self.innerLinks[cand2].append((i1, j1), cand2, cand1)
             # if there are more than two cells with the same candidate, each
             # pair defines a weaklink w.r.t. num
             elif len(cellsWithCandidate) > 2:
                 # now let us analyze al combinations of pairs
-                for n1 in range(0, len(cellsWithCandidates)-1):
+                for n1 in range(0, len(cellsWithCandidate)-1):
                     for n2 in range(n1+1, len(cellsWithCandidate)):
                         # get cell n1 and cell n2
-                        cell1 = cellsWithCandidates[n1]
-                        cell2 = cellsWithCandidates[n2]
+                        cell1 = cellsWithCandidate[n1]
+                        cell2 = cellsWithCandidate[n2]
                         # from which we can derive two weak links 
                         # link1 and link2
                         link1 = (num, cell1, cell2)
@@ -117,13 +117,13 @@ class Links:
                         if len(candsInCell1) == 2:
                             cand1 = candsInCell1[0]
                             cand2 = candsInCell1[1]
-                            self.innerLinks[cand1].append((i1, j1), cand1, cands2)
-                            self.innerLinks[cand2].append((i1, j1), cand2, cands1)
+                            self.innerLinks[cand1].append((i1, j1), cand1, cand2)
+                            self.innerLinks[cand2].append((i1, j1), cand2, cand1)
                         if len(candsInCell2) == 2:
                             cand1 = candsInCell2[0]
                             cand2 = candsInCell2[1]
-                            self.innerLinks[cand1].append((i1, j1), cand1, cands2)
-                            self.innerLinks[cand2].append((i1, j1), cand2, cands1)
+                            self.innerLinks[cand1].append((i1, j1), cand1, cand2)
+                            self.innerLinks[cand2].append((i1, j1), cand2, cand1)
     
     
     # search all rows for links    
