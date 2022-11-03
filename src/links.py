@@ -147,7 +147,7 @@ class Links:
                 
     # initial method             
     def provideAllLinks(self):
-        # destroy all tables with strong, week, inner links
+        # destroy all tables with strong, weak, inner links
         self.reinitialize()
         # search all regions for such links
         self.searchRowsForLinks()
