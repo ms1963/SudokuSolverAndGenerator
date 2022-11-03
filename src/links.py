@@ -70,8 +70,8 @@ class Links:
             # we have found a strong link wrt. num
             if len(cellsWithCandidate) == 2:
                 # both directions are a strong link
-                link1 = (mum, cells[0], cells[1])
-                link2 = (num, cells[1], cells[0])
+                link1 = (mum, cellsWithCandidate[0], cellsWithCandidate[1])
+                link2 = (num, cellsWithCandidate[1], cellsWithCandidate[0])
                 # thus, append these links to the strongLink
                 # section of candidate num
                 self.strongLinks[num].append(link1)
