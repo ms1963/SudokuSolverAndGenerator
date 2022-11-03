@@ -50,7 +50,7 @@ class Links:
     def findCandidateInCells(self, num, cells):
         cellsWithCandidate = []
         for (i,j) in cells: # iterate all cells 
-            # is num acandidate in this cell
+            # is num a candidate in this cell?
             if num in self.board.getCandidates(i, j):
                 # yes, then store it in list
                 cellsWithCandidate.append((i,j))
@@ -66,7 +66,7 @@ class Links:
             # find all cells in these cells that contain num 
             # as candidate
             cellsWithCandidate = self.findCandidateInCells(num, cells)
-            # if there are only tow in the row, column, or quadrant, 
+            # if there are only two cells in the row, column, or quadrant, 
             # we have found a strong link wrt. num
             if len(cellsWithCandidate) == 2:
                 # both directions are a strong link
@@ -75,16 +75,16 @@ class Links:
                 # thus, append these links to the strongLink
                 # section of candidate num
                 self.strongLinks[num].append(link1)
-                self.strongLinks[num].append(links)
+                self.strongLinks[num].append(link2)
                 # now let us analyze whether there is a cell 
-                # that obly contains 2 candidates. If yes, we got
+                # that only contains 2 candidates. If yes, we got
                 # strong links between two candidates of the same cell
                 (i1, j1) = link1
                 (i2, j2) = link2
                 # we check this for both cells
                 candsInCell1 =  self.board.getCandidates(i1,j1)
                 candsInCell2 =  self.board.getCandidates(i2,j2)
-                # number 1
+                # cell number 1
                 if len(candsInCell1) == 2:
                     cand1 = candsInCell1[0]
                     cand2 = candsInCell1[1]
@@ -97,7 +97,7 @@ class Links:
                     self.innerLinks[cand1].append((i1, j1), cand1, cand2)
                     self.innerLinks[cand2].append((i1, j1), cand2, cand1)
             # if there are more than two cells with the same candidate, each
-            # pair defines a weaklink w.r.t. num
+            # pair defines a weak link w.r.t. num
             elif len(cellsWithCandidate) > 2:
                 # now let us analyze al combinations of pairs
                 for n1 in range(0, len(cellsWithCandidate)-1):
