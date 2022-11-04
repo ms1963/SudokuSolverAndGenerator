@@ -325,9 +325,12 @@ Either way this reduces the remaining possibilities and thus
 supports solving the puzzle.
 
 The three lists managed by Links are two dimensional arrays
-        + weakLinks
-        + strongLinks
-        + innerLinks
+
++ weakLinks
++ strongLinks
++ innerLinks
+
+
 where for example, strongLinks[num] (num in range(1, DIM+1))
 contains all links regarding num as candidate.
 
