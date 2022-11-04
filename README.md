@@ -331,8 +331,12 @@ The three lists managed by Links are two dimensional arrays
 + innerLinks
 
 
-where for example, strongLinks[num] (num in range(1, DIM+1))
-contains all links regarding num as candidate.
+where for example, 
+
+`````
+  strongLinks[num] (num in range(1, DIM+1))
+```
+contains all links with num as candidate.
 
 Types used as entries in weakLinks[num], strongLinks[num], 
 innerLinks[num]:
