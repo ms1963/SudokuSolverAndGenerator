@@ -318,6 +318,7 @@ self.board._links.getInnerLinks(num)
 where num is a candidate in range(1, DIM+1)
 
 ```
+
 In order to leverage those links, strategies might combine links to
 chains to draw conclusions whether a cell can be occupied with a
 candidate or candidates can be ruled out for some board positions.
@@ -333,9 +334,11 @@ The three lists managed by Links are two dimensional arrays
 
 where for example, 
 
-`````
+```
   strongLinks[num] (num in range(1, DIM+1))
 ```
+
+
 contains all links with num as candidate.
 
 Types used as entries in weakLinks[num], strongLinks[num], 
