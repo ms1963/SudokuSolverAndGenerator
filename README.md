@@ -304,6 +304,21 @@ used to register additional occupation strategies.
 The method attachInfluenceStrategy(self, strategy) is used to register
 additional influence strategies
 
+The board implementation integrates the class Link which is refreshed
+by the solver implementation in each iteration.
+Strategies can access the information stored in Links be calling:
+
+```
+self.board._links.getStrongLinks(num)
+
+self.board._links.getWeakLinks(num)
+
+self.board._links.getInnerLinks(num)
+
+where num is a candidate in range(1, DIM+1)
+
+```
+
 SudokuSolver supports three formats:
     
     puzzle specified by a string
