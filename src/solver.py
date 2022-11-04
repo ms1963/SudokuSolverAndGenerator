@@ -574,7 +574,7 @@ class SudokuSolver:
         print("Legend: '* number *' specifies the occupant of a cell.")
         print()
         print("        ' 1 2 3 '")
-        print("        ' 4 5 6 '    specify the influencers or canadidates.")
+        print("        ' 4 5 6 '    specify the influencers or candidates.")
         print("        ' 7     '")
             
     
