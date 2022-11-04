@@ -37,7 +37,7 @@ from     memory            import StatePersistence
 from     chains            import Chain
 from     generator         import SudokuGenerator
 from     strategy          import OccupationStrategy, InfluenceStrategy
-from     board             import Board, DIM, dim
+from     board             import Board, DIM, dim, Links
 from pointingstrategy      import PointingPairsAndTriplesStrategy
 from remainingstrategy     import RemainingInfluencerStrategy
 from deepcheckstrategy     import DeepCheckStrategy
@@ -675,6 +675,11 @@ class SudokuSolver:
         else: 
             self.displayBoard(info) # show initial board 
         while not self.isCompleted(): # while not all cells are occupied
+            # create weak, strong, inner links for strategies
+            # that use chaining strategies. Links must be recalculated
+            # in each iteration. For performance reasons, it should not
+            # be called after each occupy()
+            self.board.createLinks()
             changes = 0
             for i in range(1, DIM+1):       # iterate through all board
                 for j in range(1, DIM+1):   # cells and find a cell that 
