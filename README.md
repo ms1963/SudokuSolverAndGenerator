@@ -341,7 +341,7 @@ innerLinks[num]:
     (num, cell1, cell2) with  cell1 = (i1, j1), 
                               cell2 = (i2, j2)
     
-            i1, j1, i2, j2 num in range(1, DIM+1)
+            i1, j1, i2, j2, num in range(1, DIM+1)
     
     It defines a  strong or weak link from cell1 to 
     cell2 with respect to candidate num, i.e., num is 
@@ -363,6 +363,18 @@ innerLinks[num]:
         links imply that there are further cells in 
         the sam row,  column, quadrant that also 
         contain num as candidate. 
+        
+   For inner strong links (innerLinks) the entry is:
+        
+    (cell, num1, num2) with cell = (i, j)
+    
+            i, j, num1, num2 in range (1, DIM+1)
+    
+        i.e., num1 and num2 are the only  
+        candidates of the cell. If num1 is not 
+        the right candidate for the cell, then 
+        num2 must be the right one, and vice
+        versa.
    ```
 
 
