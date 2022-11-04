@@ -675,15 +675,19 @@ class SudokuSolver:
         else: 
             self.displayBoard(info) # show initial board 
         while not self.isCompleted(): # while not all cells are occupied
-            # create weak, strong, inner links for strategies
-            # that use chaining strategies. Links must be recalculated
-            # in each iteration. For performance reasons, it should not
-            # be called after each occupy()
-            self.board.createLinks()
             changes = 0
-            for i in range(1, DIM+1):       # iterate through all board
+            for i in range(1, DIM+1):       # iterate through all board 
+                # before strategies are used, strong, weak and inner links
+                # are created
+                # create weak, strong, inner links for strategies
+                # that use chaining strategies. Links must be recalculated
+                # in each iteration. For performance reasons, it should not
+                # be called after each occupy()
+                self.board.createLinks()
+                if self.monitoringActive:
+                    print("Strong, inner, and weak links created")
                 for j in range(1, DIM+1):   # cells and find a cell that 
-                                            # can be occupied.
+                                            # can be occupied
                     (n, msg) = self.canBeOccupied(i, j)
                     if n != 0: # if cell can be occupied 
                         print("[" + str(i) + "," + str(j) + "] <- " + str(n))
