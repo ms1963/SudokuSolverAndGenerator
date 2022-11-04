@@ -324,6 +324,47 @@ candidate or candidates can be ruled out for some board positions.
 Either way this reduces the remaining possibilities and thus
 supports solving the puzzle.
 
+The three lists managed by Links are two dimensional arrays
+        + weakLinks
+        + strongLinks
+        + innerLinks
+where for example, strongLinks[num] (num in range(1, DIM+1))
+contains all links regarding num as candidate.
+
+Types used as entries in weakLinks[num], strongLinks[num], 
+innerLinks[num]:
+```
+    
+    For strong and weak links (strongLinks, weakLinks)
+    an entry is a tuple
+    
+    (num, cell1, cell2) with  cell1 = (i1, j1), 
+                              cell2 = (i2, j2)
+    
+            i1, j1, i2, j2 num in range(1, DIM+1)
+    
+    It defines a  strong or weak link from cell1 to 
+    cell2 with respect to candidate num, i.e., num is 
+    candidate in both cells, cell1 and cell2.
+    
+    For strong links this implies:
+        If num is not the right number for cell1,  
+        it must be the one set in cell2.
+        Of course, it also implies the weaker
+        condition: if num is the right candidate
+        for cell1, it can't be a candidate in cell2.
+        
+    For weak links this implies: 
+        If num is the right candidate for cell1, it 
+        cannot be a candidate in cell2. However, it 
+        does NOT imply: if num is not the right 
+        candidate for cell1, then it must be a 
+        candidate in cell2. This holds, because weak 
+        links imply that there are further cells in 
+        the sam row,  column, quadrant that also 
+        contain num as candidate. 
+   ```
+
 
 SudokuSolver supports three formats:
     
