@@ -335,7 +335,7 @@ The three lists managed by Links are two dimensional arrays
 where for example, 
 
 ```
-  strongLinks[num] (num in range(1, DIM+1))
+  strongLinks[num] (num in range(0, DIM))
 ```
 
 
