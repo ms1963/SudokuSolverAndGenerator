@@ -100,6 +100,7 @@ class Board:
     # create weak, strong and inner links    
     def createLinks(self):
         self._links = Links(self)
+        self._links.provideAllLinks()
         
     # stores a brute force solution used by Cheating
     def storeBFSolution(self, bfsolution):
@@ -758,10 +759,17 @@ innerLinks[num]:
 
 class Links:
     def __init__(self, board):
+        if board == None or board == []: raise ValueError("invalid board")
         self.board = board # board with all the data
         self.reinitialize() # continue initialization
+        
+    # used to give more natural way for accessing elements of lists 
+    def map(self, index):
+        return index - 1
 
     # complete clean up of tables
+    # using larger sizes of the lists so that no mapping is necessary
+    # otherwise, we would mett to access information for num using
     def reinitialize(self):
         # List of weak links with number as array index
         self.weakLinks = [[] for num in range(1, DIM+1)]
@@ -782,6 +790,20 @@ class Links:
                 cellsWithCandidate.append((i,j))
         # return list of cells with num as candidate
         return cellsWithCandidate
+        
+    # these 3 funktions should be visible externally
+    # the num is mapped with self.map to num-1 and then
+    # the list is returned. Thus a user does not need 
+    # to do this mapping herself
+    def strongLinks(self, num):
+        return strongLinks[self.map(num)]
+    
+    def weakLinks(self, num):
+        return weakLinks[self.map(num)]
+        
+    def innerLinks(self, num):
+        return innerLinks[self.map(num)]
+        
                 
     # this method is the heart of the whole class. It is 
     # responsible to update strongLinks, weakLinks, and innerLinks
@@ -800,13 +822,13 @@ class Links:
                 link2 = (num, cellsWithCandidate[1], cellsWithCandidate[0])
                 # thus, append these links to the strongLink
                 # section of candidate num
-                self.strongLinks[num].append(link1)
-                self.strongLinks[num].append(link2)
+                self.strongLinks[self.map(num)].append(link1)
+                self.strongLinks[self.map(num)].append(link2)
                 # now let us analyze whether there is a cell 
                 # that only contains 2 candidates. If yes, we got
                 # strong links between two candidates of the same cell
-                (i1, j1) = link1
-                (i2, j2) = link2
+                (i1, j1) = cellsWithCandidate[0]
+                (i2, j2) = cellsWithCandidate[1]
                 # we check this for both cells
                 candsInCell1 =  self.board.getCandidates(i1,j1)
                 candsInCell2 =  self.board.getCandidates(i2,j2)
@@ -814,14 +836,14 @@ class Links:
                 if len(candsInCell1) == 2:
                     cand1 = candsInCell1[0]
                     cand2 = candsInCell1[1]
-                    self.innerLinks[cand1].append(((i1, j1), cand1, cand2))
-                    self.innerLinks[cand2].append(((i1, j1), cand2, cand1))
+                    self.innerLinks[self.map(cand1)].append(((i1, j1), cand1, cand2))
+                    self.innerLinks[self.map(cand2)].append(((i1, j1), cand2, cand1))
                 # and number 2
                 if len(candsInCell2) == 2:
                     cand1 = candsInCell2[0]
                     cand2 = candsInCell2[1]
-                    self.innerLinks[cand1].append(((i1, j1), cand1, cand2))
-                    self.innerLinks[cand2].append(((i1, j1), cand2, cand1))
+                    self.innerLinks[self.map(cand1)].append(((i2, j2), cand1, cand2))
+                    self.innerLinks[self.map(cand2)].append(((i2, j2), cand2, cand1))
             # if there are more than two cells with the same candidate, each
             # pair defines a weak link w.r.t. num
             elif len(cellsWithCandidate) > 2:
@@ -831,25 +853,29 @@ class Links:
                         # get cell n1 and cell n2
                         cell1 = cellsWithCandidate[n1]
                         cell2 = cellsWithCandidate[n2]
+                        (i1, j1) = cell1
+                        (i2, j2) = cell2
                         # from which we can derive two weak links 
                         # link1 and link2
                         link1 = (num, cell1, cell2)
                         link2 = (num, cell2, cell1)
                         # add both to the respective element weakLinks
-                        self.weakLinks[num].append(link1)
-                        self.weakLinks[num].append(link2)
+                        self.weakLinks[self.map(num)].append(link1)
+                        self.weakLinks[self.map(num)].append(link2)
                         # and look for cells with only two candidates
                         # that can serve as inner strong links
+                        candsInCell1 =  self.board.getCandidates(i1,j1)
+                        candsInCell2 =  self.board.getCandidates(i2,j2)
                         if len(candsInCell1) == 2:
                             cand1 = candsInCell1[0]
                             cand2 = candsInCell1[1]
-                            self.innerLinks[cand1].append(((i1, j1), cand1, cand2))
-                            self.innerLinks[cand2].append(((i1, j1), cand2, cand1))
+                            self.innerLinks[self.map(cand1)].append(((i1, j1), cand1, cand2))
+                            self.innerLinks[self.map(cand2)].append(((i1, j1), cand2, cand1))
                         if len(candsInCell2) == 2:
                             cand1 = candsInCell2[0]
                             cand2 = candsInCell2[1]
-                            self.innerLinks[cand1].append(((i1, j1), cand1, cand2))
-                            self.innerLinks[cand2].append(((i1, j1), cand2, cand1))
+                            self.innerLinks[self.map(cand1)].append(((i2, j2), cand1, cand2))
+                            self.innerLinks[self.map(cand2)].append(((i2, j2), cand2, cand1))
     
     
     # search all rows for links    
