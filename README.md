@@ -318,6 +318,12 @@ self.board._links.getInnerLinks(num)
 where num is a candidate in range(1, DIM+1)
 
 ```
+In order to leverage those links, strategies might combine links to
+chains to draw conclusions whether a cell can be occupied with a
+candidate or candidates can be ruled out for some board positions.
+Either way this reduces the remaining possibilities and thus
+supports solving the puzzle.
+
 
 SudokuSolver supports three formats:
     
